@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240515124547_UpdateIdentity")]
+    [Migration("20240515131639_UpdateIdentity")]
     partial class UpdateIdentity
     {
         /// <inheritdoc />
@@ -47,18 +47,18 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("275116f2-a053-4e57-bb03-4dca5498fc1e"),
+                            Id = new Guid("23b34e24-c0dc-4885-8aa9-278f3f6ba6e2"),
                             Bid = 0.0,
                             FinalPrice = 1000.0,
-                            LotId = new Guid("ce68d480-b9b0-472b-891a-0d54bed32406"),
+                            LotId = new Guid("92ac8d50-a4f5-49d0-a70e-908043919472"),
                             UserId = new Guid("00000000-0000-0000-0000-000000000000")
                         },
                         new
                         {
-                            Id = new Guid("04dcc24a-6f71-4f8c-bdb1-d5b8eb42548f"),
+                            Id = new Guid("192b8331-a7d4-4128-97d1-0fe6e3f2fc16"),
                             Bid = 0.0,
                             FinalPrice = 1020.0,
-                            LotId = new Guid("f1595851-7944-43bf-8f9a-fdf952091566"),
+                            LotId = new Guid("7c7e1068-076e-4e83-ac84-f77623dd0d0a"),
                             UserId = new Guid("00000000-0000-0000-0000-000000000000")
                         });
                 });
@@ -105,7 +105,7 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f6b88209-eafe-489b-8d1d-82930605bfab"),
+                            Id = new Guid("12c434c3-f0fa-485b-833f-811fba946456"),
                             Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, voluptas!",
                             Images = "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
                             Name = "Lot #1",
@@ -113,11 +113,11 @@ namespace Auction.Migrations
                             Tags = "Test",
                             TradingDuration = "2 days",
                             TradingStart = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = new Guid("4fce8e49-6b11-43c4-9a30-0a89f4a97ce7")
+                            UserId = new Guid("db3cbf94-7dbc-4e08-b3be-91c9d3b7a961")
                         },
                         new
                         {
-                            Id = new Guid("6be00f42-5a04-4283-8a98-881710ac7667"),
+                            Id = new Guid("3fdf1085-2e6c-40d8-8c13-718cda485bde"),
                             Description = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, voluptas!",
                             Images = "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
                             Name = "Lot #1",
@@ -125,7 +125,7 @@ namespace Auction.Migrations
                             Tags = "Test",
                             TradingDuration = "2 days",
                             TradingStart = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = new Guid("7147d021-e603-4bd1-8706-9864ce124f00")
+                            UserId = new Guid("cad09093-da48-4282-b4b8-9d9711b5a14e")
                         });
                 });
 
@@ -145,6 +145,9 @@ namespace Auction.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsBlocked")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -168,6 +171,9 @@ namespace Auction.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
@@ -185,37 +191,43 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("152e4050-7d88-45cb-9b90-122750c0366e"),
+                            Id = new Guid("1bc2046d-6992-4a19-a642-16c49ccd28e9"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "177acc12-7a38-4b11-bc9e-b52be5c3dde4",
+                            ConcurrencyStamp = "1c24c46b-bf87-4bbe-9a92-01831b14da6d",
                             EmailConfirmed = false,
+                            IsBlocked = false,
                             LockoutEnabled = false,
-                            PasswordHash = "$2a$11$3yT/5zmK6XxjKPsshjwLZOUbKhrIJvr2jr24.oNb.T449s4ZDKyh2",
+                            PasswordHash = "$2a$11$k11P4pbuCkAtqoySzkv8Le7xScvE4HGTt21EKqCLEyMWD2tWsB8ru",
                             PhoneNumberConfirmed = false,
+                            Role = 0,
                             TwoFactorEnabled = false,
                             UserName = "Tom"
                         },
                         new
                         {
-                            Id = new Guid("d1c5077f-7810-461f-a0a5-bf202299e060"),
+                            Id = new Guid("2af5f100-19a0-4679-99c6-78fc17362ab2"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5d8f98dd-cd3d-4edb-b9bb-ea3f077f7336",
+                            ConcurrencyStamp = "fca20db0-103e-4dbb-b3b6-6a7c08147b17",
                             EmailConfirmed = false,
+                            IsBlocked = false,
                             LockoutEnabled = false,
-                            PasswordHash = "$2a$11$70R.Hq0OPSkJfmqOXtNmieC03GvTwj0x8pKylEtN04PjjlaeFfVNm",
+                            PasswordHash = "$2a$11$gW8qklPMoGcZriPWgrW/teA/yB7y6eUe84HSNgPrpxWAr5ZdbWBEu",
                             PhoneNumberConfirmed = false,
+                            Role = 1,
                             TwoFactorEnabled = false,
                             UserName = "Jerry"
                         },
                         new
                         {
-                            Id = new Guid("74160c9b-b36d-4d3a-adc3-fd6751faf06c"),
+                            Id = new Guid("309e00a7-4c0f-4bcd-82db-dfbc83461a14"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "349fbb1c-887f-456f-9414-d49f1ed4d513",
+                            ConcurrencyStamp = "a8ea105a-e7e6-4fff-9f6a-3576887108f0",
                             EmailConfirmed = false,
+                            IsBlocked = false,
                             LockoutEnabled = false,
-                            PasswordHash = "$2a$11$rOWaFBDx/Yrn9f6yUVszgOyfR6s/w3ghhlep7Mv/WPXW8/gYGFDta",
+                            PasswordHash = "$2a$11$sIdIAwtpdq9M4MuMuM8/3eS04jwl0vypGvMG.L2oWhcUnYczSH5IO",
                             PhoneNumberConfirmed = false,
+                            Role = 2,
                             TwoFactorEnabled = false,
                             UserName = "Bob"
                         });
@@ -240,21 +252,21 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("339c5a45-8fee-4d26-8f8d-d0bd0cf5b120"),
+                            Id = new Guid("785f8f78-44cf-4a1c-b463-19cf3333eb83"),
                             Balance = 1000000.0,
-                            UserId = new Guid("d3041f3d-180f-45c1-a8dc-39e700debddb")
+                            UserId = new Guid("81f10772-d815-4c8c-b881-316f6ea83d81")
                         },
                         new
                         {
-                            Id = new Guid("a1685adf-a065-41dd-a5fd-e23db3f74fa8"),
+                            Id = new Guid("4c7ea6df-fee7-47f0-a21a-860123c8e282"),
                             Balance = 1004300.0,
-                            UserId = new Guid("f5166248-8423-4a57-8599-025d71490f2d")
+                            UserId = new Guid("ee66d7a0-47f3-454c-b1a6-cdc2dfc73f36")
                         },
                         new
                         {
-                            Id = new Guid("34baed56-65b9-4e6c-aabc-4a5d58f9706c"),
+                            Id = new Guid("56a051af-1bc3-48fd-9bc5-75f884e6cbea"),
                             Balance = 1023100.0,
-                            UserId = new Guid("fc1e7b24-6cf2-4f1c-a23b-d00c32b7263f")
+                            UserId = new Guid("4239751e-e234-4f7e-b734-4fd77f285beb")
                         });
                 });
 #pragma warning restore 612, 618

@@ -59,6 +59,8 @@ namespace Auction.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     UserName = table.Column<string>(type: "longtext", nullable: false),
                     PasswordHash = table.Column<string>(type: "longtext", nullable: true),
+                    Role = table.Column<int>(type: "int", nullable: false),
+                    IsBlocked = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     NormalizedUserName = table.Column<string>(type: "longtext", nullable: true),
                     Email = table.Column<string>(type: "longtext", nullable: true),
                     NormalizedEmail = table.Column<string>(type: "longtext", nullable: true),
@@ -97,8 +99,8 @@ namespace Auction.Migrations
                 columns: new[] { "Id", "Bid", "FinalPrice", "LotId", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("04dcc24a-6f71-4f8c-bdb1-d5b8eb42548f"), 0.0, 1020.0, new Guid("f1595851-7944-43bf-8f9a-fdf952091566"), new Guid("00000000-0000-0000-0000-000000000000") },
-                    { new Guid("275116f2-a053-4e57-bb03-4dca5498fc1e"), 0.0, 1000.0, new Guid("ce68d480-b9b0-472b-891a-0d54bed32406"), new Guid("00000000-0000-0000-0000-000000000000") }
+                    { new Guid("192b8331-a7d4-4128-97d1-0fe6e3f2fc16"), 0.0, 1020.0, new Guid("7c7e1068-076e-4e83-ac84-f77623dd0d0a"), new Guid("00000000-0000-0000-0000-000000000000") },
+                    { new Guid("23b34e24-c0dc-4885-8aa9-278f3f6ba6e2"), 0.0, 1000.0, new Guid("92ac8d50-a4f5-49d0-a70e-908043919472"), new Guid("00000000-0000-0000-0000-000000000000") }
                 });
 
             migrationBuilder.InsertData(
@@ -106,18 +108,18 @@ namespace Auction.Migrations
                 columns: new[] { "Id", "Description", "Images", "Name", "StartPrice", "Tags", "TradingDuration", "TradingStart", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("6be00f42-5a04-4283-8a98-881710ac7667"), "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, voluptas!", "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user", "Lot #1", 937.10000000000002, "Test", "2 days", new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), new Guid("7147d021-e603-4bd1-8706-9864ce124f00") },
-                    { new Guid("f6b88209-eafe-489b-8d1d-82930605bfab"), "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, voluptas!", "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user", "Lot #1", 937.10000000000002, "Test", "2 days", new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), new Guid("4fce8e49-6b11-43c4-9a30-0a89f4a97ce7") }
+                    { new Guid("12c434c3-f0fa-485b-833f-811fba946456"), "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, voluptas!", "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user", "Lot #1", 937.10000000000002, "Test", "2 days", new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), new Guid("db3cbf94-7dbc-4e08-b3be-91c9d3b7a961") },
+                    { new Guid("3fdf1085-2e6c-40d8-8c13-718cda485bde"), "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, voluptas!", "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user", "Lot #1", 937.10000000000002, "Test", "2 days", new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), new Guid("cad09093-da48-4282-b4b8-9d9711b5a14e") }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "IsBlocked", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Role", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("152e4050-7d88-45cb-9b90-122750c0366e"), 0, "177acc12-7a38-4b11-bc9e-b52be5c3dde4", null, false, false, null, null, null, "$2a$11$3yT/5zmK6XxjKPsshjwLZOUbKhrIJvr2jr24.oNb.T449s4ZDKyh2", null, false, null, false, "Tom" },
-                    { new Guid("74160c9b-b36d-4d3a-adc3-fd6751faf06c"), 0, "349fbb1c-887f-456f-9414-d49f1ed4d513", null, false, false, null, null, null, "$2a$11$rOWaFBDx/Yrn9f6yUVszgOyfR6s/w3ghhlep7Mv/WPXW8/gYGFDta", null, false, null, false, "Bob" },
-                    { new Guid("d1c5077f-7810-461f-a0a5-bf202299e060"), 0, "5d8f98dd-cd3d-4edb-b9bb-ea3f077f7336", null, false, false, null, null, null, "$2a$11$70R.Hq0OPSkJfmqOXtNmieC03GvTwj0x8pKylEtN04PjjlaeFfVNm", null, false, null, false, "Jerry" }
+                    { new Guid("1bc2046d-6992-4a19-a642-16c49ccd28e9"), 0, "1c24c46b-bf87-4bbe-9a92-01831b14da6d", null, false, false, false, null, null, null, "$2a$11$k11P4pbuCkAtqoySzkv8Le7xScvE4HGTt21EKqCLEyMWD2tWsB8ru", null, false, 0, null, false, "Tom" },
+                    { new Guid("2af5f100-19a0-4679-99c6-78fc17362ab2"), 0, "fca20db0-103e-4dbb-b3b6-6a7c08147b17", null, false, false, false, null, null, null, "$2a$11$gW8qklPMoGcZriPWgrW/teA/yB7y6eUe84HSNgPrpxWAr5ZdbWBEu", null, false, 1, null, false, "Jerry" },
+                    { new Guid("309e00a7-4c0f-4bcd-82db-dfbc83461a14"), 0, "a8ea105a-e7e6-4fff-9f6a-3576887108f0", null, false, false, false, null, null, null, "$2a$11$sIdIAwtpdq9M4MuMuM8/3eS04jwl0vypGvMG.L2oWhcUnYczSH5IO", null, false, 2, null, false, "Bob" }
                 });
 
             migrationBuilder.InsertData(
@@ -125,9 +127,9 @@ namespace Auction.Migrations
                 columns: new[] { "Id", "Balance", "UserId" },
                 values: new object[,]
                 {
-                    { new Guid("339c5a45-8fee-4d26-8f8d-d0bd0cf5b120"), 1000000.0, new Guid("d3041f3d-180f-45c1-a8dc-39e700debddb") },
-                    { new Guid("34baed56-65b9-4e6c-aabc-4a5d58f9706c"), 1023100.0, new Guid("fc1e7b24-6cf2-4f1c-a23b-d00c32b7263f") },
-                    { new Guid("a1685adf-a065-41dd-a5fd-e23db3f74fa8"), 1004300.0, new Guid("f5166248-8423-4a57-8599-025d71490f2d") }
+                    { new Guid("4c7ea6df-fee7-47f0-a21a-860123c8e282"), 1004300.0, new Guid("ee66d7a0-47f3-454c-b1a6-cdc2dfc73f36") },
+                    { new Guid("56a051af-1bc3-48fd-9bc5-75f884e6cbea"), 1023100.0, new Guid("4239751e-e234-4f7e-b734-4fd77f285beb") },
+                    { new Guid("785f8f78-44cf-4a1c-b463-19cf3333eb83"), 1000000.0, new Guid("81f10772-d815-4c8c-b881-316f6ea83d81") }
                 });
         }
 

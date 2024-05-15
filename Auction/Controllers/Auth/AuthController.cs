@@ -1,5 +1,9 @@
 using Auction.Contracts.Auth;
 using Auction.DTOs;
+using Auction.Entities;
+using Auction.Enums;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Auction.Controllers.Auth;
@@ -9,7 +13,6 @@ namespace Auction.Controllers.Auth;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
-
     public AuthController(IAuthService authService)
     {
         _authService = authService;
@@ -26,8 +29,8 @@ public class AuthController : ControllerBase
                 return BadRequest("Логин и пароль должны быть заполнены");
             }
 
-            var result = await _authService.LoginAsync(userDto.UserName, userDto.Password);
-            if (result == null)
+            var user = await _authService.LoginAsync(userDto.UserName, userDto.Password);
+            if (user == null)
             {
                 return Unauthorized("Неверный логин или пароль");
             }
@@ -40,7 +43,7 @@ public class AuthController : ControllerBase
             return StatusCode(500, "Произошла ошибка при обработке вашего запроса");
         }
     }
-    
+
     [HttpPost]
     [ActionName("register")]
     public async Task<IActionResult> RegisterUserAsync([FromBody] UserDto userDto)
@@ -66,4 +69,23 @@ public class AuthController : ControllerBase
         }
     }
 
+    [HttpPost]
+    [ActionName("block")]
+    [Authorize(Roles = nameof(UserRole.Moderator))]
+    public async Task<IActionResult> BlockUserAsync([FromBody] UserDto userDto)
+    {
+        try
+        {
+            var success = await _authService.SetUserBlockedStatusAsync(userDto.UserName, true);
+            if (!success)
+                return NotFound("Пользователь не найден");
+
+            return Ok("Пользователь успешно заблокирован");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(500, "Произошла ошибка при обработке вашего запроса");
+        }
+    }
 }

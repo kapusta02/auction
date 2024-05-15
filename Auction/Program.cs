@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("appsettings.json", optional: false);
 
 var services = builder.Services;
 
@@ -17,27 +18,34 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
 services.AddIdentity<UserEntity, IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-services.AddScoped<UserManager<UserEntity>>();
-services.AddScoped<SignInManager<UserEntity>>();
-
-
-services.AddScoped<SignInManager<UserEntity>>();
-services.AddSingleton<IPasswordHash, PasswordHashService>();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 services.AddTransient<IAuthService, AuthService>();
 services.AddScoped<IAuthRepository, AuthRepository>();
-services.AddScoped<IPasswordHash, PasswordHashService>();
-
-
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection")!;
 services.AddDbContext<ApplicationDbContext>(options => options.UseMySQL(connection));
 
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options => options.LoginPath = "/login");
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/auth/login";
+        options.AccessDeniedPath = "/auth/block";
+        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+    });
+
 services.AddAuthorization();
+
+services.AddSession(options =>
+{
+    options.Cookie.IsEssential = true;
+    options.Cookie.Name = "MySession";
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+
+services.AddDistributedMemoryCache();
 
 var app = builder.Build();
 
@@ -48,14 +56,18 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
-app.UseAuthorization();
+app.UseRouting();
+
+app.UseSession();
 app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapControllers();
-// app.MapGet("/", (ApplicationDbContext db) => db.Users.ToList());
-// app.MapGet("/wallet", (ApplicationDbContext db) => db.Wallets.ToList());
-// app.MapGet("/lot", (ApplicationDbContext db) => db.Lots.ToList());
-// app.MapGet("/bidding", (ApplicationDbContext db) => db.Biddings.ToList());
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.Run();

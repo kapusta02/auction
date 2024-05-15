@@ -1,4 +1,5 @@
 using Auction.Entities;
+using Auction.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Auction;
@@ -18,9 +19,27 @@ public sealed class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserEntity>().HasData(
-            new UserEntity { Id = Guid.NewGuid(), UserName = "Tom", PasswordHash = GenerateRandomPasswordHash()},
-            new UserEntity { Id = Guid.NewGuid(), UserName = "Jerry", PasswordHash = GenerateRandomPasswordHash()},
-            new UserEntity { Id = Guid.NewGuid(), UserName = "Bob", PasswordHash = GenerateRandomPasswordHash()}
+            new UserEntity
+            {
+                Id = Guid.NewGuid(), 
+                UserName = "Tom", 
+                PasswordHash = GenerateRandomPasswordHash(),
+                Role = UserRole.User
+            },
+            new UserEntity
+            {
+                Id = Guid.NewGuid(), 
+                UserName = "Jerry", 
+                PasswordHash = GenerateRandomPasswordHash(),
+                Role = UserRole.Moderator
+            },
+            new UserEntity
+            {
+                Id = Guid.NewGuid(), 
+                UserName = "Bob", 
+                PasswordHash = GenerateRandomPasswordHash(),
+                Role = UserRole.Admin
+            }
         );
         modelBuilder.Entity<WalletEntity>().HasData(
             new WalletEntity { Id = Guid.NewGuid(), UserId = Guid.NewGuid(), Balance = 1000000.0 },
