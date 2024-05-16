@@ -81,7 +81,7 @@ public class UserController : ControllerBase
         try
         {
             if (!User.IsInRole(UserRole.Moderator.ToString()) && !User.IsInRole(UserRole.Admin.ToString()))
-                return StatusCode(403, "Недостаточно средств");
+                return StatusCode(403, "Недостаточно прав");
 
             var result = await _userService.UserBlockByIdAsync(id);
             if (result == null)

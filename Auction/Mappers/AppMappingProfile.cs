@@ -14,5 +14,8 @@ public class AppMappingProfile : Profile
         CreateMap<Wallet, WalletDto>().ReverseMap();
         CreateMap<Wallet, WalletCreateDto>().ReverseMap();
         CreateMap<Wallet, WalletUpdateBalance>().ReverseMap();
+        CreateMap<Lot, LotDto>().ReverseMap();
+        CreateMap<Lot, LotCreateDto>().ReverseMap();
+        CreateMap<Lot, LotUpdateDto>().ReverseMap();
     }
 }

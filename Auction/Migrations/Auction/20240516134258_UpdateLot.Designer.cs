@@ -3,6 +3,7 @@ using System;
 using Auction.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction.Migrations.Auction
 {
     [DbContext(typeof(AuctionContext))]
-    partial class AuctionContextModelSnapshot : ModelSnapshot
+    [Migration("20240516134258_UpdateLot")]
+    partial class UpdateLot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.19");
@@ -48,7 +51,7 @@ namespace Auction.Migrations.Auction
                         .HasMaxLength(15)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("TradingDuration")
+                    b.Property<TimeSpan>("TradingDuration")
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
@@ -70,27 +73,27 @@ namespace Auction.Migrations.Auction
                     b.HasData(
                         new
                         {
-                            Id = new Guid("64176c8c-2df6-4e34-b00f-1b0e5544c3a7"),
+                            Id = new Guid("af0944fd-a1d0-46c6-b8f1-102ffc0e791a"),
                             Description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!",
                             Images = "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
                             Name = "Lot #1",
                             StartPrice = 937.1m,
                             Tags = "Test",
-                            TradingDuration = new DateTime(2020, 2, 12, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            TradingDuration = new TimeSpan(2),
                             TradingStart = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = new Guid("9c6e273e-a1fc-47cb-a38b-c8b32b6cebbd")
+                            UserId = new Guid("8a3c757d-d096-4111-a4c4-c31fa0c0b6ef")
                         },
                         new
                         {
-                            Id = new Guid("7a2bb6f5-6d5e-4475-a341-bc43ec41157e"),
+                            Id = new Guid("0cc8a5c4-cb6d-4e94-9723-7ca823398556"),
                             Description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!",
                             Images = "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
                             Name = "Lot #1",
                             StartPrice = 937.1m,
                             Tags = "Test",
-                            TradingDuration = new DateTime(2020, 2, 12, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            TradingDuration = new TimeSpan(2),
                             TradingStart = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = new Guid("746975f7-6e50-4821-84f3-27d863486dbc")
+                            UserId = new Guid("16f01db6-72d8-47f2-b4fe-0b62f3c0324a")
                         });
                 });
 
@@ -123,24 +126,24 @@ namespace Auction.Migrations.Auction
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3578a870-9a13-4cf6-b988-8f968d8ca898"),
+                            Id = new Guid("86540527-c426-41f0-b416-84588edc27e8"),
                             Balance = 1000000.0m,
                             Currency = "Kaspi Coin",
-                            UserId = new Guid("bf121afa-652e-483e-a663-77493a807ce3")
+                            UserId = new Guid("28a24d6f-9c47-4a5b-820a-d15beb9a634e")
                         },
                         new
                         {
-                            Id = new Guid("fbca4c62-255e-4beb-99f6-213fb2fadd96"),
+                            Id = new Guid("7f0dc6dc-b4d4-4faf-a263-c6af40c1a99f"),
                             Balance = 1004300.0m,
                             Currency = "Kaspi Coin",
-                            UserId = new Guid("26653fc6-bae5-47a4-b30b-40d912f655b1")
+                            UserId = new Guid("157b95ba-4b97-473d-881c-f53470965981")
                         },
                         new
                         {
-                            Id = new Guid("2588ede3-b1b1-4115-b2fa-7a9000112d2e"),
+                            Id = new Guid("d5d8efc4-6b87-4cf8-b726-f0412b97509d"),
                             Balance = 1023100.0m,
                             Currency = "Kaspi Coin",
-                            UserId = new Guid("fe0da4e0-119c-4cdd-905b-637caa70b924")
+                            UserId = new Guid("e234697b-190a-480b-8674-a4614773a87b")
                         });
                 });
 #pragma warning restore 612, 618

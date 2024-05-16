@@ -11,17 +11,15 @@ namespace Auction.Services;
 
 public class WalletService : IWalletService
 {
-    private readonly UserManager<User> _userManager;
     private readonly AuctionContext _db;
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
     
 
-    public WalletService(IMapper mapper, AuctionContext db, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor)
+    public WalletService(IMapper mapper, AuctionContext db, IHttpContextAccessor httpContextAccessor)
     {
         _db = db;
         _mapper = mapper;
-        _userManager = userManager;
         _httpContextAccessor = httpContextAccessor;
     }
     
@@ -111,5 +109,4 @@ public class WalletService : IWalletService
         _db.Wallet.Remove(wallet);
         await _db.SaveChangesAsync();
     }
-
 }

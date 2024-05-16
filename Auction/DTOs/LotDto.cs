@@ -1,6 +1,6 @@
-namespace Auction.Entities;
+namespace Auction.DTOs;
 
-public class Lot
+public class LotDto
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
