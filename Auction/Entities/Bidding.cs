@@ -1,6 +1,6 @@
 namespace Auction.Entities;
 
-public class BiddingEntity
+public class Bidding
 {
     public Guid Id { get; set; }
     public Guid LotId { get; set; }

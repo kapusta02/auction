@@ -1,9 +1,9 @@
-namespace Auction.Entities;
+namespace Auction.DTOs;
 
-public class WalletEntity
+public class WalletDto
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
-    public double Balance { get; set; }
+    public decimal Balance { get; set; }
     public string Currency = "Kaspi Coin";
 }
