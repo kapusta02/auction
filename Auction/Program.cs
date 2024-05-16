@@ -32,7 +32,7 @@ services.AddDbContext<AuctionContext>(options => options.UseSqlite(appConnetcion
 services.AddAutoMapper(typeof(AppMappingProfile));
 services.AddScoped<IAuthService, AuthService>();
 services.AddScoped<IUserService, UserService>();
-// services.AddScoped<IWalletService, WalletService>();
+services.AddScoped<IWalletService, WalletService>();
 
 var app = builder.Build();
 
