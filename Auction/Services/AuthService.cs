@@ -37,7 +37,6 @@ public class AuthService : IAuthService
             await _roleManager.CreateAsync(new IdentityRole(role));
 
         var result = await _userManager.CreateAsync(user, dto.Password);
-
         if (result.Succeeded)
         {
             await _userManager.AddToRoleAsync(user, role);
@@ -70,9 +69,9 @@ public class AuthService : IAuthService
     public async Task<UserDto?> GetUserByIdAsync(Guid id)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id.ToString());
-
         if (user == null)
             return null;
+        
         return _mapper.Map<UserDto>(user);
     }
 }

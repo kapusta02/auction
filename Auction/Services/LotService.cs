@@ -14,7 +14,6 @@ public class LotService : ILotService
     private readonly IMapper _mapper;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-
     public LotService(IMapper mapper, AuctionContext db, IHttpContextAccessor httpContextAccessor)
     {
         _db = db;
@@ -57,21 +56,16 @@ public class LotService : ILotService
     {
         var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrWhiteSpace(userId))
-        {
             throw new InvalidOperationException("Пользователь не авторизован");
-        }
 
         var id = Guid.Parse(userId);
+
         var lot = await _db.Lot.FirstOrDefaultAsync(w => w.UserId == id);
         if (lot == null)
-        {
             throw new InvalidOperationException("Лот не найден");
-        }
-
         if (lot.UserId.ToString() != userId)
-        {
             throw new InvalidOperationException("Вы не можете редактировать этот лот");
-        }
+
         _mapper.Map(dto, lot);
         await _db.SaveChangesAsync();
         return _mapper.Map<LotDto>(lot);
@@ -86,7 +80,7 @@ public class LotService : ILotService
         var lot = await _db.Lot.FirstOrDefaultAsync(w => w.Id == lotId);
         if (lot == null)
             throw new InvalidOperationException("Лот не найден");
-        
+
         _db.Lot.Remove(lot);
         await _db.SaveChangesAsync();
     }

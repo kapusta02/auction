@@ -8,7 +8,7 @@ namespace Auction.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class LotController: ControllerBase
+public class LotController : ControllerBase
 {
     private readonly ILotService _lotService;
     private readonly ILogger<WalletsController> _logger;
@@ -23,20 +23,19 @@ public class LotController: ControllerBase
     public async Task<IActionResult> Get()
     {
         var lotDtos = await _lotService.GetAll();
-
         return Ok(lotDtos);
     }
-    
+
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Get(Guid id)
     {
         var walletDto = await _lotService.GetLotById(id);
         if (walletDto == null)
             return StatusCode(404, "Лот не найден");
-        
+
         return Ok(walletDto);
     }
-    
+
     [Authorize]
     [HttpPost]
     [ActionName("create")]
@@ -58,7 +57,7 @@ public class LotController: ControllerBase
             return StatusCode(500, e.Message);
         }
     }
-    
+
     [Authorize]
     [HttpPut]
     [ActionName("updateLot")]
@@ -80,7 +79,7 @@ public class LotController: ControllerBase
             return StatusCode(500, e.Message);
         }
     }
-    
+
     [HttpDelete]
     [ActionName("delete")]
     public async Task<IActionResult> DeleteLot(Guid lotId)
@@ -89,13 +88,18 @@ public class LotController: ControllerBase
         {
             if (!User.IsInRole(UserRole.Moderator.ToString()) && !User.IsInRole(UserRole.Admin.ToString()))
                 return StatusCode(403, "Недостаточно прав");
-            
+
             await _lotService.DeleteLot(lotId);
             return Ok("Лот успешно удален");
         }
         catch (InvalidOperationException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return StatusCode(500, e.Message);
         }
     }
 }

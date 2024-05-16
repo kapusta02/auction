@@ -13,7 +13,6 @@ public class WalletsController : ControllerBase
     private readonly IWalletService _walletService;
     private readonly ILogger<WalletsController> _logger;
 
-
     public WalletsController(IWalletService walletService, ILogger<WalletsController> logger)
     {
         _walletService = walletService;
@@ -24,7 +23,6 @@ public class WalletsController : ControllerBase
     public async Task<IActionResult> Get()
     {
         var walletDtos = await _walletService.GetAll();
-        
         return Ok(walletDtos);
     }
 
@@ -32,20 +30,16 @@ public class WalletsController : ControllerBase
     public async Task<IActionResult> Get(Guid id)
     {
         if (!User.IsInRole(UserRole.Admin.ToString()))
-        {
             return StatusCode(403, "Недостаточно прав");
-        }
-        
+
         var walletDto = await _walletService.GetWalletById(id);
-        
         return Ok(walletDto);
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> GetByUserId([FromQuery] Guid userId)
     {
         var walletDtos = await _walletService.GetWalletsByUserId(userId);
-        
         return Ok(walletDtos);
     }
 
@@ -105,6 +99,11 @@ public class WalletsController : ControllerBase
         catch (InvalidOperationException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return StatusCode(500, e.Message);
         }
     }
 }

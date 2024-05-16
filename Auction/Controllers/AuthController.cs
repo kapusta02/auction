@@ -17,26 +17,7 @@ public class AuthController : ControllerBase
         _authService = authService;
         _logger = logger;
     }
-
-    [HttpPost]
-    [ActionName("login")]
-    public async Task<IActionResult> LoginAsync([FromBody] UserLoginDto userLoginDto)
-    {
-        try
-        {
-            var result = await _authService.LoginAsync(userLoginDto);
-            if (result == null)
-                return Unauthorized("Неверный логин или пароль");
-
-            return Ok(result);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e.Message);
-            return StatusCode(500, e);
-        }
-    }
-
+    
     [HttpPost]
     [ActionName("register")]
     public async Task<IActionResult> RegisterUserAsync([FromBody] UserRegisterDto userRegisterDto)
@@ -52,6 +33,25 @@ public class AuthController : ControllerBase
         {
             _logger.LogError(e.Message);
             return StatusCode(500, e.Message);
+        }
+    }
+
+    [HttpPost]
+    [ActionName("login")]
+    public async Task<IActionResult> LoginAsync([FromBody] UserLoginDto userLoginDto)
+    {
+        try
+        {
+            var result = await _authService.LoginAsync(userLoginDto);
+            if (result == null)
+                return Unauthorized("Неверный логин или пароль");
+            
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return StatusCode(500, e);
         }
     }
 

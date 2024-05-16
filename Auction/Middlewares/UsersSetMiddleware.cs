@@ -26,7 +26,7 @@ public abstract class UsersSetMiddleware
 
     private static async Task SetAdminUser(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
     {
-        User admin = new User()
+        User admin = new User
         {
             UserName = "admin@admin.com",
             Email = "admin@admin.com",
@@ -47,7 +47,7 @@ public abstract class UsersSetMiddleware
                 await userManager.AddToRoleAsync(admin, role);
         }
     }
-    
+
     private static async Task SetModeratorUser(RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
     {
         User admin = new User
