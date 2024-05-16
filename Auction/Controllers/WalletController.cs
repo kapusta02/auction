@@ -93,5 +93,18 @@ public class WalletsController : ControllerBase
         }
     }
 
-    /*[HttpDelete]*/
+    [HttpDelete]
+    [ActionName("delete")]
+    public async Task<IActionResult> DeleteWallet(Guid walletId)
+    {
+        try
+        {
+            await _walletService.DeleteWallet(walletId);
+            return Ok("Кошелек успешно удален");
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

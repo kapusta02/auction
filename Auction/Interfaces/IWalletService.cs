@@ -9,4 +9,5 @@ public interface IWalletService
     Task<List<WalletDto>> GetWalletsByUserId(Guid userId);
     Task<WalletDto> CreateWallet(WalletCreateDto dto);
     Task<WalletDto> UpdateBalance(WalletUpdateBalance dto);
+    Task DeleteWallet(Guid walletId);
 }

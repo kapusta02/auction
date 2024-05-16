@@ -93,4 +93,23 @@ public class WalletService : IWalletService
         return _mapper.Map<WalletDto>(wallet);
     }
 
+    public async Task DeleteWallet(Guid walletId)
+    {
+        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            throw new InvalidOperationException("Пользователь не авторизован");
+        }
+
+        var id = Guid.Parse(userId);
+        var wallet = await _db.Wallet.FirstOrDefaultAsync(w => w.UserId == id && w.Id == walletId);
+        if (wallet == null)
+        {
+            throw new InvalidOperationException("Кошелек не найден или доступ к удалению запрещен");
+        }
+
+        _db.Wallet.Remove(wallet);
+        await _db.SaveChangesAsync();
+    }
+
 }
