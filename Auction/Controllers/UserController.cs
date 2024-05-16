@@ -30,9 +30,53 @@ public class UserController : ControllerBase
         return Ok(users);
     }
 
-    [HttpPost]
+    [HttpPatch]
+    [ActionName("updateRole")]
+    public async Task<IActionResult> UpdateUserRoleAsync([FromBody] Guid id)
+    {
+        try
+        {
+            if (!User.IsInRole(UserRole.Admin.ToString()))
+                return StatusCode(403, "Недостаточно прав");
+
+            var result = await _userService.UpdateUserRoleAsync(id);
+            if (result == null)
+                return NotFound("Пользователь не найден");
+
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return StatusCode(500, e.Message);
+        }
+    }
+    
+    [HttpPatch]
+    [ActionName("deleteRole")]
+    public async Task<IActionResult> DeleteModeratorRoleAsync([FromBody] Guid id)
+    {
+        try
+        {
+            if (!User.IsInRole(UserRole.Admin.ToString()))
+                return StatusCode(403, "Недостаточно прав");
+
+            var result = await _userService.DeleteModeratorRoleAsync(id);
+            if (result == null)
+                return NotFound("Пользователь не найден");
+
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.Message);
+            return StatusCode(500, e.Message);
+        }
+    }
+    
+    [HttpPatch]
     [ActionName("block")]
-    public async Task<IActionResult> BlockUser([FromBody] Guid id)
+    public async Task<IActionResult> BlockUserAsync([FromBody] Guid id)
     {
         try
         {

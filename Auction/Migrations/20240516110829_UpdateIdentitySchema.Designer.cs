@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction.Migrations
 {
     [DbContext(typeof(AuthContext))]
-    [Migration("20240516090756_UpdateIdentitySchema")]
+    [Migration("20240516110829_UpdateIdentitySchema")]
     partial class UpdateIdentitySchema
     {
         /// <inheritdoc />

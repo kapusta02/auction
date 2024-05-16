@@ -1,3 +1,5 @@
+using Auction.Enums;
+
 namespace Auction.DTOs;
 
 public class UserDto

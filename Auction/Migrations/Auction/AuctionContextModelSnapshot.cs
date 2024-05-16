@@ -46,24 +46,24 @@ namespace Auction.Migrations.Auction
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9d9db672-3e4d-43e5-88a3-94c846485539"),
+                            Id = new Guid("8355754f-f38f-4873-a247-8155b74a51a0"),
                             Balance = 1000000.0m,
                             Currency = "Kaspi Coin",
-                            UserId = new Guid("97378ce5-3ed6-464e-a930-492ed0b9ff91")
+                            UserId = new Guid("5c434df2-8a95-48df-9d5c-81f5adffcef8")
                         },
                         new
                         {
-                            Id = new Guid("1b7996fc-de72-40b2-9269-696d7b9e006a"),
+                            Id = new Guid("a19a5d66-42e8-4e47-8201-96337152f06c"),
                             Balance = 1004300.0m,
                             Currency = "Kaspi Coin",
-                            UserId = new Guid("af0210b8-2099-472b-af87-7d744d647f0f")
+                            UserId = new Guid("65b5e8da-8a81-42e8-b307-5596a2f53df5")
                         },
                         new
                         {
-                            Id = new Guid("e63fd150-c84a-47a5-b054-93e4c01f583f"),
+                            Id = new Guid("a88c32a7-72a7-4aeb-885a-97168d4630a9"),
                             Balance = 1023100.0m,
                             Currency = "Kaspi Coin",
-                            UserId = new Guid("b3a38103-36b7-4ec7-b50f-68f914bf4d1b")
+                            UserId = new Guid("6bfb27fc-492a-41b5-8e84-a76447ab6b36")
                         });
                 });
 #pragma warning restore 612, 618
