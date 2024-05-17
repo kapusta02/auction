@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Auction.DTOs;
 using Auction.Enums;
 using Auction.Interfaces;
@@ -20,9 +21,19 @@ public class WalletsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get([FromQuery] string? userId)
     {
-        var walletDtos = await _walletService.GetAll();
+        List<WalletDto> walletDtos = new List<WalletDto>();
+        if (userId != null)
+        {
+            walletDtos = await _walletService.GetWalletsByUserId(userId);
+        }
+        else
+        {
+            if (User.IsInRole(UserRole.Admin.ToString()))
+                walletDtos = await _walletService.GetAll();
+        }
+        
         return Ok(walletDtos);
     }
 
@@ -36,13 +47,6 @@ public class WalletsController : ControllerBase
         return Ok(walletDto);
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetByUserId([FromQuery] Guid userId)
-    {
-        var walletDtos = await _walletService.GetWalletsByUserId(userId);
-        return Ok(walletDtos);
-    }
-
     [Authorize]
     [HttpPost]
     [ActionName("create")]
@@ -53,15 +57,10 @@ public class WalletsController : ControllerBase
             var walletDto = await _walletService.CreateWallet(dto);
             return Ok(walletDto);
         }
-        catch (InvalidOperationException e)
-        {
-            _logger.LogError(e.Message);
-            return StatusCode(400, e.Message);
-        }
         catch (Exception e)
         {
             _logger.LogError(e.Message);
-            return StatusCode(500, e.Message);
+            return StatusCode(400, "Невозможно создать более одного кошелька");
         }
     }
 
@@ -70,40 +69,28 @@ public class WalletsController : ControllerBase
     [ActionName("updateBalance")]
     public async Task<IActionResult> UpdateBalance([FromBody] WalletUpdateBalance dto)
     {
-        try
-        {
-            var walletDto = await _walletService.UpdateBalance(dto);
-            return Ok(walletDto);
-        }
-        catch (InvalidOperationException e)
-        {
-            _logger.LogError(e.Message);
-            return StatusCode(400, e.Message);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e.Message);
-            return StatusCode(500, e.Message);
-        }
+        if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value != dto.UserId)
+            return StatusCode(403, "Недостаточно прав");
+        
+        var walletDto = await _walletService.UpdateBalance(dto);
+        if (walletDto == null)
+            return StatusCode(400, "Кошелек не найден");
+        
+        return Ok(walletDto);
     }
 
     [HttpDelete]
     [ActionName("delete")]
-    public async Task<IActionResult> DeleteWallet(Guid walletId)
+    public async Task<IActionResult> DeleteWallet(Guid walletId, string? userId)
     {
-        try
-        {
-            await _walletService.DeleteWallet(walletId);
-            return Ok("Кошелек успешно удален");
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e.Message);
-            return StatusCode(500, e.Message);
-        }
+        if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value != userId)
+            return StatusCode(403, "Недостаточно прав");
+        
+        bool isDeleted = await _walletService.DeleteWallet(walletId);
+
+        if (!isDeleted)
+            return StatusCode(404, "Кошелек не найден");
+        
+        return Ok("Кошелек успешно удален");
     }
 }

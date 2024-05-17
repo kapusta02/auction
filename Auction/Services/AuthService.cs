@@ -14,10 +14,10 @@ public class AuthService : IAuthService
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly AuthContext _db;
+    private readonly AuctionContext _db;
     private readonly IMapper _mapper;
 
-    public AuthService(IMapper mapper, AuthContext db, RoleManager<IdentityRole> roleManager,
+    public AuthService(IMapper mapper, AuctionContext db, RoleManager<IdentityRole> roleManager,
         SignInManager<User> signInManager, UserManager<User> userManager)
     {
         _mapper = mapper;

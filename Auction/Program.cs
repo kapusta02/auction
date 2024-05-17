@@ -1,8 +1,8 @@
+using Auction.Configurations;
 using Auction.Data;
 using Auction.Entities;
 using Auction.Interfaces;
 using Auction.Mappers;
-using Auction.Middlewares;
 using Auction.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +17,7 @@ var authConnetcionString = "Data Source=usersData.db";
 var appConnetcionString = "Data Source=usersData.db";
 
 services.AddDbContext<AuctionContext>(options => options.UseSqlite(appConnetcionString))
-    .AddDbContext<AuthContext>(options => options.UseSqlite(authConnetcionString))
+    .AddDbContext<AuctionContext>(options => options.UseSqlite(authConnetcionString))
     .AddIdentity<User, IdentityRole>(options =>
     {
         options.User.RequireUniqueEmail = true;
@@ -27,7 +27,7 @@ services.AddDbContext<AuctionContext>(options => options.UseSqlite(appConnetcion
         options.Password.RequireUppercase = false;
         options.Password.RequireNonAlphanumeric = false;
     })
-    .AddEntityFrameworkStores<AuthContext>();
+    .AddEntityFrameworkStores<AuctionContext>();
 
 services.AddAutoMapper(typeof(AppMappingProfile));
 services.AddScoped<IAuthService, AuthService>();
@@ -37,7 +37,7 @@ services.AddScoped<ILotService, LotService>();
 
 var app = builder.Build();
 
-await UsersSetMiddleware.Run(app.Services);
+await SetUserRights.Run(app.Services);
 
 if (app.Environment.IsDevelopment())
 {

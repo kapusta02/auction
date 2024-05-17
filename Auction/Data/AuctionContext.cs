@@ -1,17 +1,20 @@
 using Auction.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Auction.Data;
 
-public class AuctionContext : DbContext
+public class AuctionContext : IdentityDbContext<User>
 {
-    public DbSet<Wallet> Wallet { get; set; }
-    public DbSet<Lot> Lot { get; set; }
-
+    public DbSet<Wallet> Wallets { get; set; }
+    public DbSet<Bidding> Biddings { get; set; }
+    public DbSet<Lot> Lots { get; set; }
+    
     public AuctionContext(DbContextOptions<AuctionContext> options) : base(options)
     {
     }
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         SetLimits(modelBuilder);
@@ -19,14 +22,19 @@ public class AuctionContext : DbContext
 
         base.OnModelCreating(modelBuilder);
     }
-
+    
     public void SetLimits(ModelBuilder builder)
     {
         // Wallet
         builder.Entity<Wallet>().HasIndex(p => p.Id).IsUnique();
         builder.Entity<Wallet>().Property(p => p.Id).HasMaxLength(36).IsRequired();
-        builder.Entity<Wallet>().Property(p => p.UserId).HasMaxLength(36).IsRequired();
         builder.Entity<Wallet>().Property(p => p.Currency).HasMaxLength(36).IsRequired();
+        
+        // Bidding
+        builder.Entity<Bidding>().HasIndex(b => b.Id).IsUnique();
+        builder.Entity<Bidding>().Property(b => b.Id).HasMaxLength(36).IsRequired();
+        builder.Entity<Bidding>().Property(b => b.Bid).HasMaxLength(4).IsRequired();
+        builder.Entity<Bidding>().Property(b => b.FinalPrice).HasMaxLength(10).IsRequired();
 
         //Lot
         builder.Entity<Lot>().HasIndex(l => l.Id).IsUnique();
@@ -43,16 +51,45 @@ public class AuctionContext : DbContext
 
     public void SeedData(ModelBuilder builder)
     {
+        string userId = Guid.NewGuid().ToString();
+        var user = new User()
+        {
+            Id = userId,
+            FirstName = "Peter",
+            LastName = "Parker",
+            Email = "peter@example.com",
+            NormalizedEmail = "PETER@EXAMPLE.COM",
+            UserName = "peter",
+            NormalizedUserName = "PETER",
+            PhoneNumber = "+77771234567",
+            EmailConfirmed = true,
+            PhoneNumberConfirmed = true,
+            SecurityStamp = "7b97acba-6bd1-4bcf-a319-e568f4890c9e"
+        };
+        IPasswordHasher<User> hasher = new PasswordHasher<User>();
+        user.PasswordHash = hasher.HashPassword(user,"1234");
+        
+        builder.Entity<User>().HasData(user);
+        
         builder.Entity<Wallet>().HasData(
-            new Wallet { Id = Guid.NewGuid(), UserId = Guid.NewGuid(), Balance = 1000000.0M },
-            new Wallet { Id = Guid.NewGuid(), UserId = Guid.NewGuid(), Balance = 1004300.0M },
-            new Wallet { Id = Guid.NewGuid(), UserId = Guid.NewGuid(), Balance = 1023100.0M }
+            new Wallet { Id = Guid.NewGuid(), UserId = userId, Balance = 1000000.0M }
         );
+
+        Guid biddingId = Guid.NewGuid();
+        builder.Entity<Bidding>().HasData(
+            new Bidding
+            {
+                Id = biddingId, 
+                Bid = 0.0M,
+                FinalPrice = 1000.0M
+            }
+        );
+        
         builder.Entity<Lot>().HasData(
             new Lot
             {
                 Id = Guid.NewGuid(),
-                UserId = Guid.NewGuid(),
+                UserId = userId,
                 Name = "Lot #1",
                 Description = "Lorem ipsum dolor sit amet" +
                               " consectetur adipisicing elit. Earum, voluptas!",
@@ -61,13 +98,14 @@ public class AuctionContext : DbContext
                 StartPrice = 937.1M,
                 Tags = "Test",
                 TradingStart = new DateTime(2020, 02, 10, 12, 0, 0),
-                TradingDuration = new DateTime(2020, 02, 12, 12, 0, 0)
+                TradingDuration = new DateTime(2020, 02, 12, 12, 0, 0),
+                BiddingId = biddingId
             },
             new Lot
             {
                 Id = Guid.NewGuid(),
-                UserId = Guid.NewGuid(),
-                Name = "Lot #1",
+                UserId = userId,
+                Name = "Lot #2",
                 Description = "Lorem ipsum dolor sit amet" +
                               " consectetur adipisicing elit. Earum, voluptas!",
                 Images =
@@ -75,7 +113,8 @@ public class AuctionContext : DbContext
                 StartPrice = 937.1M,
                 Tags = "Test",
                 TradingStart = new DateTime(2020, 02, 10, 12, 0, 0),
-                TradingDuration = new DateTime(2020, 02, 12, 12, 0, 0)
+                TradingDuration = new DateTime(2020, 02, 12, 12, 0, 0),
+                BiddingId = biddingId
             }
         );
     }

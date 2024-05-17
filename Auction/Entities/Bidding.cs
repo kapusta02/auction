@@ -3,8 +3,9 @@ namespace Auction.Entities;
 public class Bidding
 {
     public Guid Id { get; set; }
-    public Guid LotId { get; set; }
-    public Guid UserId { get; set; }
-    public double Bid { get; set; }
-    public double FinalPrice { get; set; }
+    public List<Lot> Lot { get; set; } = null!;
+    public List<User> User { get; set; } = null!;
+    
+    public decimal Bid { get; set; }
+    public decimal FinalPrice { get; set; }
 }

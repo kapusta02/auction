@@ -12,10 +12,10 @@ namespace Auction.Services;
 public class UserService : IUserService
 {
     private readonly UserManager<User> _userManager;
-    private readonly AuthContext _db;
+    private readonly AuctionContext _db;
     private readonly IMapper _mapper;
 
-    public UserService(IMapper mapper, AuthContext db, UserManager<User> userManager)
+    public UserService(IMapper mapper, AuctionContext db, UserManager<User> userManager)
     {
         _mapper = mapper;
         _db = db;

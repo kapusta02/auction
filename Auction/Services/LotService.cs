@@ -23,17 +23,24 @@ public class LotService : ILotService
 
     public async Task<List<LotDto>> GetAll()
     {
-        var lots = await _db.Lot.ToListAsync();
+        var lots = await _db.Lots.ToListAsync();
         return _mapper.Map<List<LotDto>>(lots);
     }
 
     public async Task<LotDto?> GetLotById(Guid id)
     {
-        var lot = await _db.Lot.FirstOrDefaultAsync(l => l.Id == id);
+        var lot = await _db.Lots.FirstOrDefaultAsync(l => l.Id == id);
         if (lot == null)
             return null;
 
         return _mapper.Map<LotDto>(lot);
+    }
+    
+    public async Task<List<LotDto>> GetLotsByUserId(string userId)
+    {
+       var lots = await _db.Lots.Where(l => l.UserId == userId).ToListAsync();
+
+       return _mapper.Map<List<LotDto>>(lots);
     }
 
     public async Task<LotDto> CreateLot(LotCreateDto dto)
@@ -44,9 +51,9 @@ public class LotService : ILotService
 
         var lot = _mapper.Map<Lot>(dto);
         lot.Id = Guid.NewGuid();
-        lot.UserId = Guid.Parse(userId);
+        lot.UserId = userId;
 
-        _db.Lot.Add(lot);
+        _db.Lots.Add(lot);
         await _db.SaveChangesAsync();
 
         return _mapper.Map<LotDto>(lot);
@@ -58,9 +65,9 @@ public class LotService : ILotService
         if (string.IsNullOrWhiteSpace(userId))
             throw new InvalidOperationException("Пользователь не авторизован");
 
-        var id = Guid.Parse(userId);
+        var id = userId;
 
-        var lot = await _db.Lot.FirstOrDefaultAsync(w => w.UserId == id);
+        var lot = await _db.Lots.FirstOrDefaultAsync(w => w.UserId == id);
         if (lot == null)
             throw new InvalidOperationException("Лот не найден");
         if (lot.UserId.ToString() != userId)
@@ -77,11 +84,11 @@ public class LotService : ILotService
         if (string.IsNullOrWhiteSpace(userId))
             throw new InvalidOperationException("Пользователь не авторизован");
 
-        var lot = await _db.Lot.FirstOrDefaultAsync(w => w.Id == lotId);
+        var lot = await _db.Lots.FirstOrDefaultAsync(w => w.Id == lotId);
         if (lot == null)
             throw new InvalidOperationException("Лот не найден");
 
-        _db.Lot.Remove(lot);
+        _db.Lots.Remove(lot);
         await _db.SaveChangesAsync();
     }
 }

@@ -20,9 +20,18 @@ public class LotController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get([FromQuery]string? userId)
     {
-        var lotDtos = await _lotService.GetAll();
+        List<LotDto> lotDtos;
+        if (userId != null)
+        {
+            lotDtos = await _lotService.GetLotsByUserId(userId);
+        }
+        else
+        {
+            lotDtos = await _lotService.GetAll();
+        }
+        
         return Ok(lotDtos);
     }
 

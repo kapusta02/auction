@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Auction.Data;
 using Auction.DTOs;
 using Auction.Entities;
@@ -12,33 +11,31 @@ public class WalletService : IWalletService
 {
     private readonly AuctionContext _db;
     private readonly IMapper _mapper;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public WalletService(IMapper mapper, AuctionContext db, IHttpContextAccessor httpContextAccessor)
+    public WalletService(IMapper mapper, AuctionContext db)
     {
         _db = db;
         _mapper = mapper;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<List<WalletDto>> GetAll()
     {
-        var wallets = await _db.Wallet.ToListAsync();
+        var wallets = await _db.Wallets.ToListAsync();
         return _mapper.Map<List<WalletDto>>(wallets);
     }
 
     public async Task<WalletDto?> GetWalletById(Guid id)
     {
-        var wallet = await _db.Wallet.FirstOrDefaultAsync(w => w.Id == id);
+        var wallet = await _db.Wallets.FirstOrDefaultAsync(w => w.Id == id);
         if (wallet == null)
             return null;
 
         return _mapper.Map<WalletDto>(wallet);
     }
 
-    public async Task<List<WalletDto>> GetWalletsByUserId(Guid userId)
+    public async Task<List<WalletDto>> GetWalletsByUserId(string userId)
     {
-        var wallet = await _db.Wallet.Where(w => w.UserId.ToString().ToUpper() == userId.ToString().ToUpper())
+        var wallet = await _db.Wallets.Where(w => w.UserId.ToUpper() == userId.ToUpper())
             .ToListAsync();
 
         return _mapper.Map<List<WalletDto>>(wallet);
@@ -46,35 +43,20 @@ public class WalletService : IWalletService
 
     public async Task<WalletDto> CreateWallet(WalletCreateDto dto)
     {
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrWhiteSpace(userId))
-            throw new InvalidOperationException("Пользователь не авторизован");
-
-        var id = Guid.Parse(userId);
-        if (_db.Wallet.Any(w => w.UserId == id))
-            throw new InvalidOperationException("Кошелек уже создан");
-
         var wallet = _mapper.Map<Wallet>(dto);
-        wallet.Id = Guid.NewGuid();
-        wallet.UserId = id;
         wallet.Currency = "Kaspi Coin";
 
-        _db.Wallet.Add(wallet);
+        _db.Wallets.Add(wallet);
         await _db.SaveChangesAsync();
 
         return _mapper.Map<WalletDto>(wallet);
     }
 
-    public async Task<WalletDto> UpdateBalance(WalletUpdateBalance dto)
+    public async Task<WalletDto?> UpdateBalance(WalletUpdateBalance dto)
     {
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrWhiteSpace(userId))
-            throw new InvalidOperationException("Пользователь не авторизован");
-
-        var id = Guid.Parse(userId);
-        var wallet = await _db.Wallet.FirstOrDefaultAsync(w => w.UserId == id);
+        var wallet = await _db.Wallets.FirstOrDefaultAsync(w => w.UserId == dto.UserId);
         if (wallet == null)
-            throw new InvalidOperationException("Кошелек не найден");
+            return null;
 
         wallet.Balance += dto.Balance;
         await _db.SaveChangesAsync();
@@ -82,18 +64,15 @@ public class WalletService : IWalletService
         return _mapper.Map<WalletDto>(wallet);
     }
 
-    public async Task DeleteWallet(Guid walletId)
+    public async Task<bool> DeleteWallet(Guid walletId)
     {
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrWhiteSpace(userId))
-            throw new InvalidOperationException("Пользователь не авторизован");
-
-        var id = Guid.Parse(userId);
-        var wallet = await _db.Wallet.FirstOrDefaultAsync(w => w.UserId == id && w.Id == walletId);
+        var wallet = await _db.Wallets.FirstOrDefaultAsync(w => w.Id == walletId);
         if (wallet == null)
-            throw new InvalidOperationException("Кошелек не найден или доступ к удалению запрещен");
+            return false;
 
-        _db.Wallet.Remove(wallet);
+        _db.Wallets.Remove(wallet);
         await _db.SaveChangesAsync();
+
+        return true;
     }
 }

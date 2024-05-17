@@ -2,9 +2,9 @@ using Auction.Entities;
 using Auction.Enums;
 using Microsoft.AspNetCore.Identity;
 
-namespace Auction.Middlewares;
+namespace Auction.Configurations;
 
-public abstract class UsersSetMiddleware
+public abstract class SetUserRights
 {
     public static async Task Run(IServiceProvider serviceProvider)
     {
