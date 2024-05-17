@@ -33,7 +33,7 @@ public class WalletsController : ControllerBase
             if (User.IsInRole(UserRole.Admin.ToString()))
                 walletDtos = await _walletService.GetAll();
         }
-        
+
         return Ok(walletDtos);
     }
 
@@ -71,11 +71,11 @@ public class WalletsController : ControllerBase
     {
         if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value != dto.UserId)
             return StatusCode(403, "Недостаточно прав");
-        
+
         var walletDto = await _walletService.UpdateBalance(dto);
         if (walletDto == null)
             return StatusCode(400, "Кошелек не найден");
-        
+
         return Ok(walletDto);
     }
 
@@ -85,12 +85,12 @@ public class WalletsController : ControllerBase
     {
         if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value != userId)
             return StatusCode(403, "Недостаточно прав");
-        
+
         bool isDeleted = await _walletService.DeleteWallet(walletId);
 
         if (!isDeleted)
             return StatusCode(404, "Кошелек не найден");
-        
+
         return Ok("Кошелек успешно удален");
     }
 }

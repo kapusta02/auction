@@ -12,7 +12,7 @@ public class UserController : ControllerBase
     private readonly IAuthService _authService;
     private readonly IUserService _userService;
     private readonly ILogger<AuthController> _logger;
-    
+
     public UserController(IAuthService authService, IUserService userService, ILogger<AuthController> logger)
     {
         _authService = authService;
@@ -80,9 +80,9 @@ public class UserController : ControllerBase
     {
         if (!User.IsInRole(UserRole.Moderator.ToString()) && !User.IsInRole(UserRole.Admin.ToString()))
             return StatusCode(403, "Недостаточно прав");
-    
+
         var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    
+
         if (currentUserId == id.ToString())
             return StatusCode(400, "Нельзя заблокировать самого себя");
 
@@ -100,5 +100,4 @@ public class UserController : ControllerBase
             _ => StatusCode(500, "Произошла ошибка")
         };
     }
-
 }

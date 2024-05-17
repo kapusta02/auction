@@ -71,7 +71,7 @@ public class AuthService : IAuthService
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id.ToString());
         if (user == null)
             return null;
-        
+
         return _mapper.Map<UserDto>(user);
     }
 }

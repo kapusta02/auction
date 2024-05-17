@@ -11,11 +11,11 @@ public class AuctionContext : IdentityDbContext<User>
     public DbSet<Wallet> Wallets { get; set; }
     public DbSet<Bidding> Biddings { get; set; }
     public DbSet<Lot> Lots { get; set; }
-    
+
     public AuctionContext(DbContextOptions<AuctionContext> options) : base(options)
     {
     }
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         SetLimits(modelBuilder);
@@ -23,14 +23,14 @@ public class AuctionContext : IdentityDbContext<User>
 
         base.OnModelCreating(modelBuilder);
     }
-    
+
     public void SetLimits(ModelBuilder builder)
     {
         // Wallet
         builder.Entity<Wallet>().HasIndex(p => p.Id).IsUnique();
         builder.Entity<Wallet>().Property(p => p.Id).HasMaxLength(36).IsRequired();
         builder.Entity<Wallet>().Property(p => p.Currency).HasMaxLength(36).IsRequired();
-        
+
         // Bidding
         builder.Entity<Bidding>().HasIndex(b => b.Id).IsUnique();
         builder.Entity<Bidding>().Property(b => b.Id).HasMaxLength(36).IsRequired();
@@ -54,7 +54,7 @@ public class AuctionContext : IdentityDbContext<User>
     {
         string userId = Guid.NewGuid().ToString();
         string roleId = Guid.NewGuid().ToString();
-        
+
         builder.Entity<IdentityRole>().HasData(
             new IdentityRole
             {
@@ -78,16 +78,16 @@ public class AuctionContext : IdentityDbContext<User>
             SecurityStamp = "7b97acba-6bd1-4bcf-a319-e568f4890c9e"
         };
         IPasswordHasher<User> hasher = new PasswordHasher<User>();
-        user.PasswordHash = hasher.HashPassword(user,"1234");
-        
+        user.PasswordHash = hasher.HashPassword(user, "1234");
+
         builder.Entity<User>().HasData(user);
-        
+
         builder.Entity<Wallet>().HasData(
             new Wallet
             {
-                Id = Guid.NewGuid(), 
-                UserId = userId, 
-                Balance = 1000000.0M, 
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                Balance = 1000000.0M,
                 CreatedAt = DateTime.Now
             }
         );
@@ -96,13 +96,13 @@ public class AuctionContext : IdentityDbContext<User>
         builder.Entity<Bidding>().HasData(
             new Bidding
             {
-                Id = biddingId, 
+                Id = biddingId,
                 Bid = 0.0M,
                 FinalPrice = 1000.0M,
                 CreatedAt = DateTime.Now
             }
         );
-        
+
         builder.Entity<Lot>().HasData(
             new Lot
             {

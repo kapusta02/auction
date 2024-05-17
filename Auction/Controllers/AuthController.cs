@@ -17,7 +17,7 @@ public class AuthController : ControllerBase
         _authService = authService;
         _logger = logger;
     }
-    
+
     [HttpPost]
     [ActionName("register")]
     public async Task<IActionResult> RegisterUserAsync([FromBody] UserRegisterDto userRegisterDto)
@@ -45,7 +45,9 @@ public class AuthController : ControllerBase
             var result = await _authService.LoginAsync(userLoginDto);
             if (result == null)
                 return Unauthorized("Неверный логин или пароль");
-            
+            if (result.IsBlocked)
+                return BadRequest("Пользователь заблокироан");
+
             return Ok(result);
         }
         catch (Exception e)

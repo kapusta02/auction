@@ -13,11 +13,9 @@ var services = builder.Services;
 services.AddControllers();
 services.AddSwaggerGen();
 
-var authConnetcionString = "Data Source=usersData.db";
 var appConnetcionString = "Data Source=usersData.db";
 
 services.AddDbContext<AuctionContext>(options => options.UseSqlite(appConnetcionString))
-    .AddDbContext<AuctionContext>(options => options.UseSqlite(authConnetcionString))
     .AddIdentity<User, IdentityRole>(options =>
     {
         options.User.RequireUniqueEmail = true;

@@ -22,12 +22,12 @@ public class UserService : IUserService
         _db = db;
         _userManager = userManager;
     }
-    
+
     public async Task<User?> GetUserByIdAsync(Guid id)
     {
         return await _db.Users.FirstOrDefaultAsync(u => u.Id == id.ToString());
     }
-    
+
     public async Task<UserDto?> UpdateUserRoleAsync(Guid id)
     {
         var user = await _userManager.FindByIdAsync(id.ToString());
@@ -53,7 +53,7 @@ public class UserService : IUserService
 
         return _mapper.Map<UserDto>(user);
     }
-    
+
     public async Task<UserBlockResponse> UserBlockByIdAsync(Guid id)
     {
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id.ToString());

@@ -36,7 +36,6 @@ public class LotService : ILotService
     public async Task<List<LotDto>> GetLotsByUserId(string userId)
     {
         var lots = await _db.Lots.Where(l => l.UserId == userId).ToListAsync();
-
         return _mapper.Map<List<LotDto>>(lots);
     }
 
@@ -44,7 +43,7 @@ public class LotService : ILotService
     {
         var lot = _mapper.Map<Lot>(dto);
         lot.CreatedAt = DateTime.Now;
-        
+
         _db.Lots.Add(lot);
         await _db.SaveChangesAsync();
 

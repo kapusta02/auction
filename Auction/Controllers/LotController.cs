@@ -25,13 +25,9 @@ public class LotController : ControllerBase
     {
         List<LotDto> lotDtos;
         if (userId != null)
-        {
             lotDtos = await _lotService.GetLotsByUserId(userId);
-        }
         else
-        {
             lotDtos = await _lotService.GetAll();
-        }
 
         return Ok(lotDtos);
     }
@@ -83,9 +79,9 @@ public class LotController : ControllerBase
     public async Task<IActionResult> DeleteLot(Guid lotId)
     {
         if (!User.IsInRole(UserRole.Admin.ToString()) && !User.IsInRole(UserRole.Moderator.ToString()))
-                return StatusCode(403, "Недостаточно прав");
-        
-        bool isDeleted = await _lotService.DeleteLot(lotId);
+            return StatusCode(403, "Недостаточно прав");
+
+        var isDeleted = await _lotService.DeleteLot(lotId);
         if (!isDeleted)
             return StatusCode(404, "Лот не найден");
 
