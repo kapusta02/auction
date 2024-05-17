@@ -36,4 +36,9 @@ public class LotUpdateDto
     [DataType(DataType.DateTime)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
     public DateTime TradingDuration { get; set; }
+    
+    [Required(ErrorMessage = "Пожалуйста введите userId")]
+    [StringLength(36, ErrorMessage = "Максимум 36 символов")]
+    [DataType(DataType.Text)]
+    public string UserId { get; set; }
 }

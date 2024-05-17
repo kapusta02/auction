@@ -3,6 +3,7 @@ using Auction.DTOs;
 using Auction.Entities;
 using Auction.Enums;
 using Auction.Interfaces;
+using Auction.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,21 +22,12 @@ public class UserService : IUserService
         _db = db;
         _userManager = userManager;
     }
-
-    public async Task<UserDto?> UserBlockByIdAsync(Guid id)
+    
+    public async Task<User?> GetUserByIdAsync(Guid id)
     {
-        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id.ToString());
-        if (user is null)
-            return null;
-
-        if (user.IsBlocked)
-            throw new InvalidOperationException("Пользователь уже заблокирован");
-        user.IsBlocked = true;
-
-        await _db.SaveChangesAsync();
-        return _mapper.Map<UserDto>(user);
+        return await _db.Users.FirstOrDefaultAsync(u => u.Id == id.ToString());
     }
-
+    
     public async Task<UserDto?> UpdateUserRoleAsync(Guid id)
     {
         var user = await _userManager.FindByIdAsync(id.ToString());
@@ -60,5 +52,24 @@ public class UserService : IUserService
         await _userManager.AddToRoleAsync(user, UserRole.User.ToString());
 
         return _mapper.Map<UserDto>(user);
+    }
+    
+    public async Task<UserBlockResponse> UserBlockByIdAsync(Guid id)
+    {
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id.ToString());
+        if (user is null)
+            return new UserBlockResponse { Result = UserBlockResult.UserNotFound };
+
+        if (user.IsBlocked)
+            return new UserBlockResponse { Result = UserBlockResult.UserAlreadyBlocked };
+
+        user.IsBlocked = true;
+        await _db.SaveChangesAsync();
+
+        return new UserBlockResponse
+        {
+            Result = UserBlockResult.Success,
+            User = _mapper.Map<UserDto>(user)
+        };
     }
 }

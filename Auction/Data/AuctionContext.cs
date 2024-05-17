@@ -1,4 +1,5 @@
 using Auction.Entities;
+using Auction.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -52,7 +53,17 @@ public class AuctionContext : IdentityDbContext<User>
     public void SeedData(ModelBuilder builder)
     {
         string userId = Guid.NewGuid().ToString();
-        var user = new User()
+        string roleId = Guid.NewGuid().ToString();
+        
+        builder.Entity<IdentityRole>().HasData(
+            new IdentityRole
+            {
+                Id = roleId,
+                Name = UserRole.User.ToString(),
+                NormalizedName = UserRole.User.ToString().ToUpper()
+            }
+        );
+        var user = new User
         {
             Id = userId,
             FirstName = "Peter",
@@ -91,21 +102,6 @@ public class AuctionContext : IdentityDbContext<User>
                 Id = Guid.NewGuid(),
                 UserId = userId,
                 Name = "Lot #1",
-                Description = "Lorem ipsum dolor sit amet" +
-                              " consectetur adipisicing elit. Earum, voluptas!",
-                Images =
-                    "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
-                StartPrice = 937.1M,
-                Tags = "Test",
-                TradingStart = new DateTime(2020, 02, 10, 12, 0, 0),
-                TradingDuration = new DateTime(2020, 02, 12, 12, 0, 0),
-                BiddingId = biddingId
-            },
-            new Lot
-            {
-                Id = Guid.NewGuid(),
-                UserId = userId,
-                Name = "Lot #2",
                 Description = "Lorem ipsum dolor sit amet" +
                               " consectetur adipisicing elit. Earum, voluptas!",
                 Images =

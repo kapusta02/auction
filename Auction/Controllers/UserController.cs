@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Auction.Enums;
 using Auction.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -77,25 +78,27 @@ public class UserController : ControllerBase
     [ActionName("block")]
     public async Task<IActionResult> BlockUserAsync([FromBody] Guid id)
     {
-        try
-        {
-            if (!User.IsInRole(UserRole.Moderator.ToString()) && !User.IsInRole(UserRole.Admin.ToString()))
-                return StatusCode(403, "Недостаточно прав");
+        if (!User.IsInRole(UserRole.Moderator.ToString()) && !User.IsInRole(UserRole.Admin.ToString()))
+            return StatusCode(403, "Недостаточно прав");
+    
+        var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    
+        if (currentUserId == id.ToString())
+            return StatusCode(400, "Нельзя заблокировать самого себя");
 
-            var result = await _userService.UserBlockByIdAsync(id);
-            if (result == null)
-                return StatusCode(404, "Данный пользователь не найден");
-            return Ok(result);
-        }
-        catch (InvalidOperationException e)
+        var userToBlock = await _authService.GetUserByIdAsync(id);
+        if (userToBlock == null)
+            return StatusCode(404, "Данный пользователь не найден");
+
+        var response = await _userService.UserBlockByIdAsync(id);
+
+        return response.Result switch
         {
-            _logger.LogError(e.Message);
-            return StatusCode(400, e.Message);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e.Message);
-            return StatusCode(500, e.Message);
-        }
+            UserBlockResult.UserNotFound => StatusCode(404, "Данный пользователь не найден"),
+            UserBlockResult.UserAlreadyBlocked => StatusCode(400, "Пользователь уже заблокирован"),
+            UserBlockResult.Success => Ok(response.User),
+            _ => StatusCode(500, "Произошла ошибка")
+        };
     }
+
 }

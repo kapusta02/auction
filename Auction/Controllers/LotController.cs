@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Auction.DTOs;
 using Auction.Enums;
 using Auction.Interfaces;
@@ -20,7 +21,7 @@ public class LotController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get([FromQuery]string? userId)
+    public async Task<IActionResult> Get([FromQuery] string? userId)
     {
         List<LotDto> lotDtos;
         if (userId != null)
@@ -31,7 +32,7 @@ public class LotController : ControllerBase
         {
             lotDtos = await _lotService.GetAll();
         }
-        
+
         return Ok(lotDtos);
     }
 
@@ -55,15 +56,10 @@ public class LotController : ControllerBase
             var walletDto = await _lotService.CreateLot(dto);
             return Ok(walletDto);
         }
-        catch (InvalidOperationException e)
-        {
-            _logger.LogError(e.Message);
-            return StatusCode(400, e.Message);
-        }
         catch (Exception e)
         {
             _logger.LogError(e.Message);
-            return StatusCode(500, e.Message);
+            return StatusCode(400, "Невозможно создать больше одного лота");
         }
     }
 
@@ -72,43 +68,27 @@ public class LotController : ControllerBase
     [ActionName("updateLot")]
     public async Task<IActionResult> UpdateLot([FromBody] LotUpdateDto dto)
     {
-        try
-        {
-            var walletDto = await _lotService.UpdateLot(dto);
-            return Ok(walletDto);
-        }
-        catch (InvalidOperationException e)
-        {
-            _logger.LogError(e.Message);
-            return StatusCode(400, e.Message);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e.Message);
-            return StatusCode(500, e.Message);
-        }
+        if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value != dto.UserId)
+            return StatusCode(403, "Недостаточно средств");
+
+        var lotDto = await _lotService.UpdateLot(dto);
+        if (lotDto == null)
+            return StatusCode(400, "Лот не найден");
+
+        return Ok(lotDto);
     }
 
     [HttpDelete]
     [ActionName("delete")]
     public async Task<IActionResult> DeleteLot(Guid lotId)
     {
-        try
-        {
-            if (!User.IsInRole(UserRole.Moderator.ToString()) && !User.IsInRole(UserRole.Admin.ToString()))
+        if (!User.IsInRole(UserRole.Admin.ToString()) && !User.IsInRole(UserRole.Moderator.ToString()))
                 return StatusCode(403, "Недостаточно прав");
+        
+        bool isDeleted = await _lotService.DeleteLot(lotId);
+        if (!isDeleted)
+            return StatusCode(404, "Лот не найден");
 
-            await _lotService.DeleteLot(lotId);
-            return Ok("Лот успешно удален");
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e.Message);
-            return StatusCode(500, e.Message);
-        }
+        return Ok("Лот успешно удален");
     }
 }

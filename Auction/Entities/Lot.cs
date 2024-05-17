@@ -11,5 +11,5 @@ public class Lot
     public string Tags { get; set; } = "";
     public DateTime TradingStart { get; set; }
     public DateTime TradingDuration { get; set; }
-    public Guid BiddingId { get; set; }
+    public Guid? BiddingId { get; set; }
 }

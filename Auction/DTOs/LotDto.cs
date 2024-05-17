@@ -3,7 +3,7 @@ namespace Auction.DTOs;
 public class LotDto
 {
     public Guid Id { get; set; }
-    public Guid UserId { get; set; }
+    public string UserId { get; set; } = "";
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
     public string Images { get; set; } = "";

@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Auction.Data;
 using Auction.DTOs;
 using Auction.Entities;
@@ -12,13 +11,11 @@ public class LotService : ILotService
 {
     private readonly AuctionContext _db;
     private readonly IMapper _mapper;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public LotService(IMapper mapper, AuctionContext db, IHttpContextAccessor httpContextAccessor)
+    public LotService(IMapper mapper, AuctionContext db)
     {
         _db = db;
         _mapper = mapper;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<List<LotDto>> GetAll()
@@ -35,23 +32,17 @@ public class LotService : ILotService
 
         return _mapper.Map<LotDto>(lot);
     }
-    
+
     public async Task<List<LotDto>> GetLotsByUserId(string userId)
     {
-       var lots = await _db.Lots.Where(l => l.UserId == userId).ToListAsync();
+        var lots = await _db.Lots.Where(l => l.UserId == userId).ToListAsync();
 
-       return _mapper.Map<List<LotDto>>(lots);
+        return _mapper.Map<List<LotDto>>(lots);
     }
 
     public async Task<LotDto> CreateLot(LotCreateDto dto)
     {
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrWhiteSpace(userId))
-            throw new InvalidOperationException("Пользователь не авторизован");
-
         var lot = _mapper.Map<Lot>(dto);
-        lot.Id = Guid.NewGuid();
-        lot.UserId = userId;
 
         _db.Lots.Add(lot);
         await _db.SaveChangesAsync();
@@ -59,36 +50,27 @@ public class LotService : ILotService
         return _mapper.Map<LotDto>(lot);
     }
 
-    public async Task<LotDto> UpdateLot(LotUpdateDto dto)
+    public async Task<LotDto?> UpdateLot(LotUpdateDto dto)
     {
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrWhiteSpace(userId))
-            throw new InvalidOperationException("Пользователь не авторизован");
-
-        var id = userId;
-
-        var lot = await _db.Lots.FirstOrDefaultAsync(w => w.UserId == id);
+        var lot = await _db.Lots.FirstOrDefaultAsync(w => w.UserId == dto.UserId);
         if (lot == null)
-            throw new InvalidOperationException("Лот не найден");
-        if (lot.UserId.ToString() != userId)
-            throw new InvalidOperationException("Вы не можете редактировать этот лот");
+            return null;
 
         _mapper.Map(dto, lot);
         await _db.SaveChangesAsync();
+
         return _mapper.Map<LotDto>(lot);
     }
 
-    public async Task DeleteLot(Guid lotId)
+    public async Task<bool> DeleteLot(Guid lotId)
     {
-        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrWhiteSpace(userId))
-            throw new InvalidOperationException("Пользователь не авторизован");
-
         var lot = await _db.Lots.FirstOrDefaultAsync(w => w.Id == lotId);
         if (lot == null)
-            throw new InvalidOperationException("Лот не найден");
+            return false;
 
         _db.Lots.Remove(lot);
         await _db.SaveChangesAsync();
+
+        return true;
     }
 }

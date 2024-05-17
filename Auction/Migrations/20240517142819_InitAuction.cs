@@ -3,8 +3,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace Auction.Migrations
 {
     /// <inheritdoc />
@@ -231,7 +229,7 @@ namespace Auction.Migrations
                     Tags = table.Column<string>(type: "TEXT", maxLength: 15, nullable: false),
                     TradingStart = table.Column<DateTime>(type: "TEXT", maxLength: 20, nullable: false),
                     TradingDuration = table.Column<DateTime>(type: "TEXT", maxLength: 20, nullable: false),
-                    BiddingId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    BiddingId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -246,33 +244,33 @@ namespace Auction.Migrations
                         name: "FK_Lots_Biddings_BiddingId",
                         column: x => x.BiddingId,
                         principalTable: "Biddings",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "74d0f91a-fc1a-4e20-854d-ed6d01c0a4e7", null, "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "IsBlocked", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "94ddcccd-0768-4601-b7cb-c1254c335e3d", 0, "9d206d81-a577-4f53-b5a3-c2fcee379e86", "peter@example.com", true, "Peter", false, "Parker", false, null, "PETER@EXAMPLE.COM", "PETER", "AQAAAAIAAYagAAAAEO/CmXbd/aU/3ljw1JWyANJFDHZbzgJ+RUchT6NGqK7AZT6/5ENXlmqY/11WC9jt5Q==", "+77771234567", true, "7b97acba-6bd1-4bcf-a319-e568f4890c9e", false, "peter" });
+                values: new object[] { "c7a801c7-8030-4b91-aca3-30d5c627734d", 0, "f8c488aa-953f-4de0-98db-996afeb78e7a", "peter@example.com", true, "Peter", false, "Parker", false, null, "PETER@EXAMPLE.COM", "PETER", "AQAAAAIAAYagAAAAELtjpBnU3lMumjwGZx61GwIRm3/SmX9LZKl6lVx0GtJrFTwcWUYLfkXZtazd1+dlwg==", "+77771234567", true, "7b97acba-6bd1-4bcf-a319-e568f4890c9e", false, "peter" });
 
             migrationBuilder.InsertData(
                 table: "Biddings",
                 columns: new[] { "Id", "Bid", "FinalPrice" },
-                values: new object[] { new Guid("974041a7-018d-4e24-978e-fd4be10cadb7"), 0.0m, 1000.0m });
+                values: new object[] { new Guid("54d936db-4831-4664-8cb0-5df648714ff7"), 0.0m, 1000.0m });
 
             migrationBuilder.InsertData(
                 table: "Lots",
                 columns: new[] { "Id", "BiddingId", "Description", "Images", "Name", "StartPrice", "Tags", "TradingDuration", "TradingStart", "UserId" },
-                values: new object[,]
-                {
-                    { new Guid("2205bbb2-53e4-4a49-98e4-ff5494abfdf3"), new Guid("974041a7-018d-4e24-978e-fd4be10cadb7"), "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!", "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user", "Lot #2", 937.1m, "Test", new DateTime(2020, 2, 12, 12, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), "94ddcccd-0768-4601-b7cb-c1254c335e3d" },
-                    { new Guid("2ee70879-4310-492a-94ba-525a1dd831ae"), new Guid("974041a7-018d-4e24-978e-fd4be10cadb7"), "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!", "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user", "Lot #1", 937.1m, "Test", new DateTime(2020, 2, 12, 12, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), "94ddcccd-0768-4601-b7cb-c1254c335e3d" }
-                });
+                values: new object[] { new Guid("5ab2bf67-73e1-4781-abe5-b85b2aa792a7"), new Guid("54d936db-4831-4664-8cb0-5df648714ff7"), "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!", "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user", "Lot #1", 937.1m, "Test", new DateTime(2020, 2, 12, 12, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), "c7a801c7-8030-4b91-aca3-30d5c627734d" });
 
             migrationBuilder.InsertData(
                 table: "Wallets",
                 columns: new[] { "Id", "Balance", "Currency", "UserId" },
-                values: new object[] { new Guid("5775371e-21e2-4ced-8c01-841b4999802b"), 1000000.0m, "Kaspi Coin", "94ddcccd-0768-4601-b7cb-c1254c335e3d" });
+                values: new object[] { new Guid("1e79eb10-568f-4321-a85e-df5ab45deb0f"), 1000000.0m, "Kaspi Coin", "c7a801c7-8030-4b91-aca3-30d5c627734d" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -336,7 +334,8 @@ namespace Auction.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Lots_UserId",
                 table: "Lots",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wallets_Id",

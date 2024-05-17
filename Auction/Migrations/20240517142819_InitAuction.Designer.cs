@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction.Migrations
 {
     [DbContext(typeof(AuctionContext))]
-    [Migration("20240517115918_InitAuction")]
+    [Migration("20240517142819_InitAuction")]
     partial class InitAuction
     {
         /// <inheritdoc />
@@ -45,7 +45,7 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("974041a7-018d-4e24-978e-fd4be10cadb7"),
+                            Id = new Guid("54d936db-4831-4664-8cb0-5df648714ff7"),
                             Bid = 0.0m,
                             FinalPrice = 1000.0m
                         });
@@ -58,7 +58,7 @@ namespace Auction.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("BiddingId")
+                    b.Property<Guid?>("BiddingId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
@@ -105,15 +105,16 @@ namespace Auction.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Lots");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2ee70879-4310-492a-94ba-525a1dd831ae"),
-                            BiddingId = new Guid("974041a7-018d-4e24-978e-fd4be10cadb7"),
+                            Id = new Guid("5ab2bf67-73e1-4781-abe5-b85b2aa792a7"),
+                            BiddingId = new Guid("54d936db-4831-4664-8cb0-5df648714ff7"),
                             Description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!",
                             Images = "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
                             Name = "Lot #1",
@@ -121,20 +122,7 @@ namespace Auction.Migrations
                             Tags = "Test",
                             TradingDuration = new DateTime(2020, 2, 12, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             TradingStart = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "94ddcccd-0768-4601-b7cb-c1254c335e3d"
-                        },
-                        new
-                        {
-                            Id = new Guid("2205bbb2-53e4-4a49-98e4-ff5494abfdf3"),
-                            BiddingId = new Guid("974041a7-018d-4e24-978e-fd4be10cadb7"),
-                            Description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!",
-                            Images = "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
-                            Name = "Lot #2",
-                            StartPrice = 937.1m,
-                            Tags = "Test",
-                            TradingDuration = new DateTime(2020, 2, 12, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            TradingStart = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "94ddcccd-0768-4601-b7cb-c1254c335e3d"
+                            UserId = "c7a801c7-8030-4b91-aca3-30d5c627734d"
                         });
                 });
 
@@ -215,9 +203,9 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "94ddcccd-0768-4601-b7cb-c1254c335e3d",
+                            Id = "c7a801c7-8030-4b91-aca3-30d5c627734d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9d206d81-a577-4f53-b5a3-c2fcee379e86",
+                            ConcurrencyStamp = "f8c488aa-953f-4de0-98db-996afeb78e7a",
                             Email = "peter@example.com",
                             EmailConfirmed = true,
                             FirstName = "Peter",
@@ -226,7 +214,7 @@ namespace Auction.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PETER@EXAMPLE.COM",
                             NormalizedUserName = "PETER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEO/CmXbd/aU/3ljw1JWyANJFDHZbzgJ+RUchT6NGqK7AZT6/5ENXlmqY/11WC9jt5Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELtjpBnU3lMumjwGZx61GwIRm3/SmX9LZKl6lVx0GtJrFTwcWUYLfkXZtazd1+dlwg==",
                             PhoneNumber = "+77771234567",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "7b97acba-6bd1-4bcf-a319-e568f4890c9e",
@@ -267,10 +255,10 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5775371e-21e2-4ced-8c01-841b4999802b"),
+                            Id = new Guid("1e79eb10-568f-4321-a85e-df5ab45deb0f"),
                             Balance = 1000000.0m,
                             Currency = "Kaspi Coin",
-                            UserId = "94ddcccd-0768-4601-b7cb-c1254c335e3d"
+                            UserId = "c7a801c7-8030-4b91-aca3-30d5c627734d"
                         });
                 });
 
@@ -313,6 +301,14 @@ namespace Auction.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "74d0f91a-fc1a-4e20-854d-ed6d01c0a4e7",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -421,13 +417,11 @@ namespace Auction.Migrations
                 {
                     b.HasOne("Auction.Entities.Bidding", null)
                         .WithMany("Lot")
-                        .HasForeignKey("BiddingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BiddingId");
 
                     b.HasOne("Auction.Entities.User", null)
-                        .WithMany("Lots")
-                        .HasForeignKey("UserId")
+                        .WithOne("Lots")
+                        .HasForeignKey("Auction.Entities.Lot", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -516,7 +510,8 @@ namespace Auction.Migrations
 
             modelBuilder.Entity("Auction.Entities.User", b =>
                 {
-                    b.Navigation("Lots");
+                    b.Navigation("Lots")
+                        .IsRequired();
 
                     b.Navigation("Wallet");
                 });
