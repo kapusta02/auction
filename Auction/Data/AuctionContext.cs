@@ -83,7 +83,13 @@ public class AuctionContext : IdentityDbContext<User>
         builder.Entity<User>().HasData(user);
         
         builder.Entity<Wallet>().HasData(
-            new Wallet { Id = Guid.NewGuid(), UserId = userId, Balance = 1000000.0M }
+            new Wallet
+            {
+                Id = Guid.NewGuid(), 
+                UserId = userId, 
+                Balance = 1000000.0M, 
+                CreatedAt = DateTime.Now
+            }
         );
 
         Guid biddingId = Guid.NewGuid();
@@ -92,7 +98,8 @@ public class AuctionContext : IdentityDbContext<User>
             {
                 Id = biddingId, 
                 Bid = 0.0M,
-                FinalPrice = 1000.0M
+                FinalPrice = 1000.0M,
+                CreatedAt = DateTime.Now
             }
         );
         
@@ -110,7 +117,8 @@ public class AuctionContext : IdentityDbContext<User>
                 Tags = "Test",
                 TradingStart = new DateTime(2020, 02, 10, 12, 0, 0),
                 TradingDuration = new DateTime(2020, 02, 12, 12, 0, 0),
-                BiddingId = biddingId
+                BiddingId = biddingId,
+                CreatedAt = DateTime.Now
             }
         );
     }

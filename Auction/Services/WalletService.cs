@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Auction.Data;
 using Auction.DTOs;
 using Auction.Entities;
@@ -46,6 +45,7 @@ public class WalletService : IWalletService
     {
         var wallet = _mapper.Map<Wallet>(dto);
         wallet.Currency = "Kaspi Coin";
+        wallet.CreatedAt = DateTime.Now;
 
         _db.Wallets.Add(wallet);
         await _db.SaveChangesAsync();
@@ -60,6 +60,7 @@ public class WalletService : IWalletService
             return null;
 
         wallet.Balance += dto.Balance;
+        wallet.UpdatedAt = DateTime.Now;
         await _db.SaveChangesAsync();
 
         return _mapper.Map<WalletDto>(wallet);

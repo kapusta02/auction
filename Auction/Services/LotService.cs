@@ -43,7 +43,8 @@ public class LotService : ILotService
     public async Task<LotDto> CreateLot(LotCreateDto dto)
     {
         var lot = _mapper.Map<Lot>(dto);
-
+        lot.CreatedAt = DateTime.Now;
+        
         _db.Lots.Add(lot);
         await _db.SaveChangesAsync();
 
@@ -56,6 +57,7 @@ public class LotService : ILotService
         if (lot == null)
             return null;
 
+        lot.UpdatedAt = DateTime.Now;
         _mapper.Map(dto, lot);
         await _db.SaveChangesAsync();
 

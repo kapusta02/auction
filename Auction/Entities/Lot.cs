@@ -12,4 +12,6 @@ public class Lot
     public DateTime TradingStart { get; set; }
     public DateTime TradingDuration { get; set; }
     public Guid? BiddingId { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }
