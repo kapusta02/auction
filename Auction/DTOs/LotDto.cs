@@ -9,6 +9,7 @@ public class LotDto
     public string Images { get; set; } = "";
     public decimal StartPrice { get; set; }
     public string Tags { get; set; } = "";
+    public bool IsArchived { get; set; }
     public DateTime TradingStart { get; set; }
     public DateTime TradingDuration { get; set; }
 }

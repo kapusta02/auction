@@ -24,7 +24,7 @@ namespace Auction.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Bid")
+                    b.Property<decimal>("Bids")
                         .HasMaxLength(4)
                         .HasColumnType("TEXT");
 
@@ -35,7 +35,7 @@ namespace Auction.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsArchived")
+                    b.Property<bool>("IsBindingsStarted")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -51,11 +51,11 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("72662b33-af50-4a22-b681-63262824a47c"),
-                            Bid = 0.0m,
-                            CreatedAt = new DateTime(2024, 5, 18, 0, 2, 12, 110, DateTimeKind.Local).AddTicks(3792),
+                            Id = new Guid("b2212d51-a8db-4382-b99a-4919d9f377ee"),
+                            Bids = 0.0m,
+                            CreatedAt = new DateTime(2024, 5, 18, 21, 18, 11, 84, DateTimeKind.Local).AddTicks(3738),
                             FinalPrice = 1000.0m,
-                            IsArchived = false,
+                            IsBindingsStarted = false,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -73,6 +73,9 @@ namespace Auction.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("CurrentBid")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(40)
@@ -82,6 +85,12 @@ namespace Auction.Migrations
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsStarted")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -128,18 +137,21 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7a73a039-5f8c-455a-842d-3182bc5cfe55"),
-                            BiddingId = new Guid("72662b33-af50-4a22-b681-63262824a47c"),
-                            CreatedAt = new DateTime(2024, 5, 18, 0, 2, 12, 110, DateTimeKind.Local).AddTicks(3818),
+                            Id = new Guid("06703e74-5bd4-4efe-90e3-e3374560f8ba"),
+                            BiddingId = new Guid("b2212d51-a8db-4382-b99a-4919d9f377ee"),
+                            CreatedAt = new DateTime(2024, 5, 18, 21, 18, 11, 84, DateTimeKind.Local).AddTicks(3759),
+                            CurrentBid = 0.0m,
                             Description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!",
                             Images = "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
+                            IsArchived = false,
+                            IsStarted = false,
                             Name = "Lot #1",
                             StartPrice = 937.1m,
                             Tags = "Test",
-                            TradingDuration = new DateTime(2020, 2, 12, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            TradingDuration = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             TradingStart = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "59c0877c-fe48-4701-97bd-0a8dd90ff67d"
+                            UserId = "bb3ca938-28e9-4a7f-a1a4-c4c8528a746f"
                         });
                 });
 
@@ -220,9 +232,9 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "59c0877c-fe48-4701-97bd-0a8dd90ff67d",
+                            Id = "bb3ca938-28e9-4a7f-a1a4-c4c8528a746f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8d9e7ff1-6e2a-44c8-ba95-654531a79938",
+                            ConcurrencyStamp = "8f49e0cd-50ec-4a0e-b3fd-4e444e20633c",
                             Email = "peter@example.com",
                             EmailConfirmed = true,
                             FirstName = "Peter",
@@ -231,7 +243,7 @@ namespace Auction.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PETER@EXAMPLE.COM",
                             NormalizedUserName = "PETER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEbWM8yqyNcJ8qO1IPPQuIwNbCH4KliANIbNjmPaDyDXlhQah2FQgacLJxAJpOMOwg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEO+ZbmZFJ+UiI3OR2xv0zRz6Hk1DxkQeZ9WYzTPYADwEfZ2nsRxQqyQb72rrGdbXjg==",
                             PhoneNumber = "+77771234567",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "7b97acba-6bd1-4bcf-a319-e568f4890c9e",
@@ -278,12 +290,12 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2ee58dff-8169-4658-a564-b9dfd0478f78"),
+                            Id = new Guid("eba061ee-cb3c-4cf3-ba33-3d2abeb94728"),
                             Balance = 1000000.0m,
-                            CreatedAt = new DateTime(2024, 5, 18, 0, 2, 12, 110, DateTimeKind.Local).AddTicks(3756),
+                            CreatedAt = new DateTime(2024, 5, 18, 21, 18, 11, 84, DateTimeKind.Local).AddTicks(3696),
                             Currency = "Kaspi Coin",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "59c0877c-fe48-4701-97bd-0a8dd90ff67d"
+                            UserId = "bb3ca938-28e9-4a7f-a1a4-c4c8528a746f"
                         });
                 });
 
@@ -330,7 +342,7 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "caeca804-ae61-4674-b9fe-3da55e6f2211",
+                            Id = "eb499953-e9ff-45bf-bae7-9e33017893a1",
                             Name = "User",
                             NormalizedName = "USER"
                         });

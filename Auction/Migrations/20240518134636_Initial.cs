@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Auction.Migrations
 {
     /// <inheritdoc />
-    public partial class InitAuction : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -58,8 +58,11 @@ namespace Auction.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", maxLength: 36, nullable: false),
-                    Bid = table.Column<decimal>(type: "TEXT", maxLength: 4, nullable: false),
-                    FinalPrice = table.Column<decimal>(type: "TEXT", maxLength: 10, nullable: false)
+                    Bids = table.Column<decimal>(type: "TEXT", maxLength: 4, nullable: false),
+                    FinalPrice = table.Column<decimal>(type: "TEXT", maxLength: 10, nullable: false),
+                    IsBindingsStarted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -179,6 +182,8 @@ namespace Auction.Migrations
                     Id = table.Column<Guid>(type: "TEXT", maxLength: 36, nullable: false),
                     Balance = table.Column<decimal>(type: "TEXT", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Currency = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false)
                 },
                 constraints: table =>
@@ -229,6 +234,10 @@ namespace Auction.Migrations
                     Tags = table.Column<string>(type: "TEXT", maxLength: 15, nullable: false),
                     TradingStart = table.Column<DateTime>(type: "TEXT", maxLength: 20, nullable: false),
                     TradingDuration = table.Column<DateTime>(type: "TEXT", maxLength: 20, nullable: false),
+                    IsStarted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsArchived = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     BiddingId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -250,27 +259,27 @@ namespace Auction.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "74d0f91a-fc1a-4e20-854d-ed6d01c0a4e7", null, "User", "USER" });
+                values: new object[] { "490ba9de-b38e-4f13-b811-4558f2e348b9", null, "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "IsBlocked", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "c7a801c7-8030-4b91-aca3-30d5c627734d", 0, "f8c488aa-953f-4de0-98db-996afeb78e7a", "peter@example.com", true, "Peter", false, "Parker", false, null, "PETER@EXAMPLE.COM", "PETER", "AQAAAAIAAYagAAAAELtjpBnU3lMumjwGZx61GwIRm3/SmX9LZKl6lVx0GtJrFTwcWUYLfkXZtazd1+dlwg==", "+77771234567", true, "7b97acba-6bd1-4bcf-a319-e568f4890c9e", false, "peter" });
+                values: new object[] { "039df29d-e213-454f-8888-edecff4c498c", 0, "cece9b74-3353-4014-a29e-0f5a0eab65b3", "peter@example.com", true, "Peter", false, "Parker", false, null, "PETER@EXAMPLE.COM", "PETER", "AQAAAAIAAYagAAAAEPbrwZgojF3Au/cNUlkaV2BLxLcV1aNTlD/Y83MpkKvsr0JEzJCiI/4Pn0rv0rnJ0w==", "+77771234567", true, "7b97acba-6bd1-4bcf-a319-e568f4890c9e", false, "peter" });
 
             migrationBuilder.InsertData(
                 table: "Biddings",
-                columns: new[] { "Id", "Bid", "FinalPrice" },
-                values: new object[] { new Guid("54d936db-4831-4664-8cb0-5df648714ff7"), 0.0m, 1000.0m });
+                columns: new[] { "Id", "Bids", "CreatedAt", "FinalPrice", "IsBindingsStarted", "UpdatedAt" },
+                values: new object[] { new Guid("528988a4-9a1f-48ba-b03f-640ba249a996"), 0.0m, new DateTime(2024, 5, 18, 18, 46, 36, 711, DateTimeKind.Local).AddTicks(5351), 1000.0m, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) });
 
             migrationBuilder.InsertData(
                 table: "Lots",
-                columns: new[] { "Id", "BiddingId", "Description", "Images", "Name", "StartPrice", "Tags", "TradingDuration", "TradingStart", "UserId" },
-                values: new object[] { new Guid("5ab2bf67-73e1-4781-abe5-b85b2aa792a7"), new Guid("54d936db-4831-4664-8cb0-5df648714ff7"), "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!", "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user", "Lot #1", 937.1m, "Test", new DateTime(2020, 2, 12, 12, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), "c7a801c7-8030-4b91-aca3-30d5c627734d" });
+                columns: new[] { "Id", "BiddingId", "CreatedAt", "Description", "Images", "IsArchived", "IsStarted", "Name", "StartPrice", "Tags", "TradingDuration", "TradingStart", "UpdatedAt", "UserId" },
+                values: new object[] { new Guid("b7ddd2d0-dfa4-46e3-a475-6e8b62cf3a87"), new Guid("528988a4-9a1f-48ba-b03f-640ba249a996"), new DateTime(2024, 5, 18, 18, 46, 36, 711, DateTimeKind.Local).AddTicks(5370), "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!", "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user", false, false, "Lot #1", 937.1m, "Test", new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "039df29d-e213-454f-8888-edecff4c498c" });
 
             migrationBuilder.InsertData(
                 table: "Wallets",
-                columns: new[] { "Id", "Balance", "Currency", "UserId" },
-                values: new object[] { new Guid("1e79eb10-568f-4321-a85e-df5ab45deb0f"), 1000000.0m, "Kaspi Coin", "c7a801c7-8030-4b91-aca3-30d5c627734d" });
+                columns: new[] { "Id", "Balance", "CreatedAt", "Currency", "UpdatedAt", "UserId" },
+                values: new object[] { new Guid("71e112f9-442a-4626-bc5b-09d71895e30b"), 1000000.0m, new DateTime(2024, 5, 18, 18, 46, 36, 711, DateTimeKind.Local).AddTicks(5327), "Kaspi Coin", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "039df29d-e213-454f-8888-edecff4c498c" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

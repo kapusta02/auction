@@ -34,7 +34,7 @@ public class AuctionContext : IdentityDbContext<User>
         // Bidding
         builder.Entity<Bidding>().HasIndex(b => b.Id).IsUnique();
         builder.Entity<Bidding>().Property(b => b.Id).HasMaxLength(36).IsRequired();
-        builder.Entity<Bidding>().Property(b => b.Bid).HasMaxLength(4).IsRequired();
+        builder.Entity<Bidding>().Property(b => b.Bids).HasMaxLength(4).IsRequired();
         builder.Entity<Bidding>().Property(b => b.FinalPrice).HasMaxLength(10).IsRequired();
 
         //Lot
@@ -97,9 +97,10 @@ public class AuctionContext : IdentityDbContext<User>
             new Bidding
             {
                 Id = biddingId,
-                Bid = 0.0M,
+                Bids =  0.0M,
                 FinalPrice = 1000.0M,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                IsBindingsStarted = false,
             }
         );
 
@@ -116,9 +117,12 @@ public class AuctionContext : IdentityDbContext<User>
                 StartPrice = 937.1M,
                 Tags = "Test",
                 TradingStart = new DateTime(2020, 02, 10, 12, 0, 0),
-                TradingDuration = new DateTime(2020, 02, 12, 12, 0, 0),
+                TradingDuration = new DateTime(2020, 02, 10, 12, 0, 0),
                 BiddingId = biddingId,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                IsStarted = false,
+                IsArchived = false,
+                CurrentBid = 0.0M
             }
         );
     }

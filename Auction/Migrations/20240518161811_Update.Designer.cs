@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction.Migrations
 {
     [DbContext(typeof(AuctionContext))]
-    [Migration("20240517142819_InitAuction")]
-    partial class InitAuction
+    [Migration("20240518161811_Update")]
+    partial class Update
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,12 +27,21 @@ namespace Auction.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Bid")
+                    b.Property<decimal>("Bids")
                         .HasMaxLength(4)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("FinalPrice")
                         .HasMaxLength(10)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsBindingsStarted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -45,9 +54,12 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("54d936db-4831-4664-8cb0-5df648714ff7"),
-                            Bid = 0.0m,
-                            FinalPrice = 1000.0m
+                            Id = new Guid("b2212d51-a8db-4382-b99a-4919d9f377ee"),
+                            Bids = 0.0m,
+                            CreatedAt = new DateTime(2024, 5, 18, 21, 18, 11, 84, DateTimeKind.Local).AddTicks(3738),
+                            FinalPrice = 1000.0m,
+                            IsBindingsStarted = false,
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -61,6 +73,12 @@ namespace Auction.Migrations
                     b.Property<Guid?>("BiddingId")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("CurrentBid")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(40)
@@ -70,6 +88,12 @@ namespace Auction.Migrations
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsStarted")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -93,6 +117,9 @@ namespace Auction.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(36)
@@ -113,16 +140,21 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5ab2bf67-73e1-4781-abe5-b85b2aa792a7"),
-                            BiddingId = new Guid("54d936db-4831-4664-8cb0-5df648714ff7"),
+                            Id = new Guid("06703e74-5bd4-4efe-90e3-e3374560f8ba"),
+                            BiddingId = new Guid("b2212d51-a8db-4382-b99a-4919d9f377ee"),
+                            CreatedAt = new DateTime(2024, 5, 18, 21, 18, 11, 84, DateTimeKind.Local).AddTicks(3759),
+                            CurrentBid = 0.0m,
                             Description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!",
                             Images = "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
+                            IsArchived = false,
+                            IsStarted = false,
                             Name = "Lot #1",
                             StartPrice = 937.1m,
                             Tags = "Test",
-                            TradingDuration = new DateTime(2020, 2, 12, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            TradingDuration = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             TradingStart = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "c7a801c7-8030-4b91-aca3-30d5c627734d"
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "bb3ca938-28e9-4a7f-a1a4-c4c8528a746f"
                         });
                 });
 
@@ -203,9 +235,9 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c7a801c7-8030-4b91-aca3-30d5c627734d",
+                            Id = "bb3ca938-28e9-4a7f-a1a4-c4c8528a746f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f8c488aa-953f-4de0-98db-996afeb78e7a",
+                            ConcurrencyStamp = "8f49e0cd-50ec-4a0e-b3fd-4e444e20633c",
                             Email = "peter@example.com",
                             EmailConfirmed = true,
                             FirstName = "Peter",
@@ -214,7 +246,7 @@ namespace Auction.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PETER@EXAMPLE.COM",
                             NormalizedUserName = "PETER",
-                            PasswordHash = "AQAAAAIAAYagAAAAELtjpBnU3lMumjwGZx61GwIRm3/SmX9LZKl6lVx0GtJrFTwcWUYLfkXZtazd1+dlwg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEO+ZbmZFJ+UiI3OR2xv0zRz6Hk1DxkQeZ9WYzTPYADwEfZ2nsRxQqyQb72rrGdbXjg==",
                             PhoneNumber = "+77771234567",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "7b97acba-6bd1-4bcf-a319-e568f4890c9e",
@@ -233,9 +265,15 @@ namespace Auction.Migrations
                     b.Property<decimal>("Balance")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Currency")
                         .IsRequired()
                         .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
@@ -255,10 +293,12 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1e79eb10-568f-4321-a85e-df5ab45deb0f"),
+                            Id = new Guid("eba061ee-cb3c-4cf3-ba33-3d2abeb94728"),
                             Balance = 1000000.0m,
+                            CreatedAt = new DateTime(2024, 5, 18, 21, 18, 11, 84, DateTimeKind.Local).AddTicks(3696),
                             Currency = "Kaspi Coin",
-                            UserId = "c7a801c7-8030-4b91-aca3-30d5c627734d"
+                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "bb3ca938-28e9-4a7f-a1a4-c4c8528a746f"
                         });
                 });
 
@@ -305,7 +345,7 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "74d0f91a-fc1a-4e20-854d-ed6d01c0a4e7",
+                            Id = "eb499953-e9ff-45bf-bae7-9e33017893a1",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -510,8 +550,7 @@ namespace Auction.Migrations
 
             modelBuilder.Entity("Auction.Entities.User", b =>
                 {
-                    b.Navigation("Lots")
-                        .IsRequired();
+                    b.Navigation("Lots");
 
                     b.Navigation("Wallet");
                 });

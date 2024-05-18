@@ -32,6 +32,7 @@ services.AddScoped<IAuthService, AuthService>();
 services.AddScoped<IUserService, UserService>();
 services.AddScoped<IWalletService, WalletService>();
 services.AddScoped<ILotService, LotService>();
+services.AddScoped<IBiddingService, BiddingService>();
 
 var app = builder.Build();
 

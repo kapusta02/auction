@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction.Migrations
 {
     [DbContext(typeof(AuctionContext))]
-    [Migration("20240517144104_UpdateAuctionCreatedFieldAndUpdated")]
-    partial class UpdateAuctionCreatedFieldAndUpdated
+    [Migration("20240518134636_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,7 +27,7 @@ namespace Auction.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Bid")
+                    b.Property<decimal>("Bids")
                         .HasMaxLength(4)
                         .HasColumnType("TEXT");
 
@@ -37,6 +37,9 @@ namespace Auction.Migrations
                     b.Property<decimal>("FinalPrice")
                         .HasMaxLength(10)
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsBindingsStarted")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
@@ -51,10 +54,11 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f3916bd2-671c-4c19-897c-e723f4058695"),
-                            Bid = 0.0m,
-                            CreatedAt = new DateTime(2024, 5, 17, 19, 41, 4, 94, DateTimeKind.Local).AddTicks(2386),
+                            Id = new Guid("528988a4-9a1f-48ba-b03f-640ba249a996"),
+                            Bids = 0.0m,
+                            CreatedAt = new DateTime(2024, 5, 18, 18, 46, 36, 711, DateTimeKind.Local).AddTicks(5351),
                             FinalPrice = 1000.0m,
+                            IsBindingsStarted = false,
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
@@ -81,6 +85,12 @@ namespace Auction.Migrations
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsStarted")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -127,18 +137,20 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f4d4172b-071c-4c1c-9a93-273755343117"),
-                            BiddingId = new Guid("f3916bd2-671c-4c19-897c-e723f4058695"),
-                            CreatedAt = new DateTime(2024, 5, 17, 19, 41, 4, 94, DateTimeKind.Local).AddTicks(2451),
+                            Id = new Guid("b7ddd2d0-dfa4-46e3-a475-6e8b62cf3a87"),
+                            BiddingId = new Guid("528988a4-9a1f-48ba-b03f-640ba249a996"),
+                            CreatedAt = new DateTime(2024, 5, 18, 18, 46, 36, 711, DateTimeKind.Local).AddTicks(5370),
                             Description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!",
                             Images = "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
+                            IsArchived = false,
+                            IsStarted = false,
                             Name = "Lot #1",
                             StartPrice = 937.1m,
                             Tags = "Test",
-                            TradingDuration = new DateTime(2020, 2, 12, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            TradingDuration = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             TradingStart = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "af6cf668-f1c4-4ef6-ab21-438c3b0d4875"
+                            UserId = "039df29d-e213-454f-8888-edecff4c498c"
                         });
                 });
 
@@ -219,9 +231,9 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "af6cf668-f1c4-4ef6-ab21-438c3b0d4875",
+                            Id = "039df29d-e213-454f-8888-edecff4c498c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e2bda8a8-9ead-4039-a648-5e7d7a45eae7",
+                            ConcurrencyStamp = "cece9b74-3353-4014-a29e-0f5a0eab65b3",
                             Email = "peter@example.com",
                             EmailConfirmed = true,
                             FirstName = "Peter",
@@ -230,7 +242,7 @@ namespace Auction.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PETER@EXAMPLE.COM",
                             NormalizedUserName = "PETER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEG0M/u3JjS0FmCDbHToRoxyDXUNOQAeHa+iPt67ZyYLvjARhv5HT8mU8FaalwnypWA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPbrwZgojF3Au/cNUlkaV2BLxLcV1aNTlD/Y83MpkKvsr0JEzJCiI/4Pn0rv0rnJ0w==",
                             PhoneNumber = "+77771234567",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "7b97acba-6bd1-4bcf-a319-e568f4890c9e",
@@ -277,12 +289,12 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("55d24087-8680-479f-a4c9-cfa144c0a104"),
+                            Id = new Guid("71e112f9-442a-4626-bc5b-09d71895e30b"),
                             Balance = 1000000.0m,
-                            CreatedAt = new DateTime(2024, 5, 17, 19, 41, 4, 94, DateTimeKind.Local).AddTicks(2349),
+                            CreatedAt = new DateTime(2024, 5, 18, 18, 46, 36, 711, DateTimeKind.Local).AddTicks(5327),
                             Currency = "Kaspi Coin",
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "af6cf668-f1c4-4ef6-ab21-438c3b0d4875"
+                            UserId = "039df29d-e213-454f-8888-edecff4c498c"
                         });
                 });
 
@@ -329,7 +341,7 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d8d4e2b4-0c5d-4377-a8c6-22fe6f2c9913",
+                            Id = "490ba9de-b38e-4f13-b811-4558f2e348b9",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -534,8 +546,7 @@ namespace Auction.Migrations
 
             modelBuilder.Entity("Auction.Entities.User", b =>
                 {
-                    b.Navigation("Lots")
-                        .IsRequired();
+                    b.Navigation("Lots");
 
                     b.Navigation("Wallet");
                 });
