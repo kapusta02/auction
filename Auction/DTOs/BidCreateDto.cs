@@ -5,12 +5,10 @@ namespace Auction.DTOs;
 public class BidCreateDto
 {
     [Required(ErrorMessage = "Пожалуйста введите userId")]
-    [StringLength(36, ErrorMessage = "Максимум 36 символов")]
     [DataType(DataType.Text)]
     public string UserId { get; set; } = "";
     
     [Required(ErrorMessage = "Пожалуйста введите userId")]
-    [StringLength(36, ErrorMessage = "Максимум 36 символов")]
     [DataType(DataType.Text)]
     public Guid LotId { get; set; }
     
