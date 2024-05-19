@@ -35,11 +35,26 @@ public class BidService : IBidService
         if (lot == null)
             throw new ExceptionsExtension(ExceptionTypes.EntityNotFoundException, "Запрашиваемого лота не существует");
 
+        var lotDto = await _db.Lots.FirstOrDefaultAsync(l => l.Id == bidCreateDto.LotId);
+        
+        
+        if (DateTime.Now >= lot.TradingStart)
+        {
+            if (lotDto != null)
+            {
+                lotDto.IsBiddingStarted = true;
+                _db.Lots.Update(lotDto);
+            }
+            
+            await _db.SaveChangesAsync();
+        }
+        if(!lot.IsBiddingStarted)
+            throw new ExceptionsExtension(ExceptionTypes.ConflictException, "Торги еще не начались");
+        
         if (DateTime.Now >= lot.TradingStart.AddMinutes(lot.TradingDurationMinutes))
         {
             if (!await _db.Bids.AnyAsync(b => b.Lot.Id == bidCreateDto.LotId))
             {
-                var lotDto = await _db.Lots.FirstOrDefaultAsync(l => l.Id == bidCreateDto.LotId);
                 if (lotDto != null)
                 {
                     lotDto.IsArchived = true;
@@ -63,9 +78,6 @@ public class BidService : IBidService
                     $"Торги закончены, победитель {auctionWinner}");
             }
         }
-
-        if (!lot.IsBiddingStarted)
-            throw new ExceptionsExtension(ExceptionTypes.ConflictException, "Торги еще не начались");
 
         if (user.Wallet == null || user.Wallet.Sum < bidCreateDto.Sum)
             throw new ExceptionsExtension(ExceptionTypes.ConflictException, "Недостаточно средств на счету");
