@@ -21,7 +21,9 @@ public class LotService : ILotService
     public async Task<List<LotDto>> GetAll()
     {
         var lots = await _db.Lots.ToListAsync();
-        return _mapper.Map<List<LotDto>>(lots);
+
+        var lotDtos = _mapper.Map<List<LotDto>>(lots);
+        return lotDtos;
     }
 
     public async Task<LotDto?> GetLotById(Guid id)
@@ -30,13 +32,16 @@ public class LotService : ILotService
         if (lot == null)
             return null;
 
-        return _mapper.Map<LotDto>(lot);
+        var lotDto = _mapper.Map<LotDto>(lot);
+        return lotDto;
     }
 
     public async Task<List<LotDto>> GetLotsByUserId(string userId)
     {
         var lots = await _db.Lots.Where(l => l.UserId == userId).ToListAsync();
-        return _mapper.Map<List<LotDto>>(lots);
+
+        var lotDtos = _mapper.Map<List<LotDto>>(lots);
+        return lotDtos;
     }
 
     public async Task<LotDto> CreateLot(LotCreateDto dto)
@@ -47,7 +52,8 @@ public class LotService : ILotService
         _db.Lots.Add(lot);
         await _db.SaveChangesAsync();
 
-        return _mapper.Map<LotDto>(lot);
+        var lotDto = _mapper.Map<LotDto>(lot);
+        return lotDto;
     }
 
     public async Task<LotDto?> UpdateLot(LotUpdateDto dto)
@@ -57,10 +63,13 @@ public class LotService : ILotService
             return null;
 
         lot.UpdatedAt = DateTime.Now;
-        _mapper.Map(dto, lot);
+
+        lot = _mapper.Map<Lot>(dto);
+        _db.Lots.Update(lot);
         await _db.SaveChangesAsync();
 
-        return _mapper.Map<LotDto>(lot);
+        var lotDto = _mapper.Map<LotDto>(lot);
+        return lotDto;
     }
 
     public async Task<bool> DeleteLot(Guid lotId)
@@ -70,6 +79,19 @@ public class LotService : ILotService
             return false;
 
         _db.Lots.Remove(lot);
+        await _db.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> SetCurrentLeadingBid(Guid lotId, Guid bidId)
+    {
+        var lot = await _db.Lots.FirstOrDefaultAsync(l => l.Id == lotId);
+        if (lot == null)
+            return false;
+
+        lot.CurrentLeadingBidId = bidId;
+        _db.Lots.Update(lot);
         await _db.SaveChangesAsync();
 
         return true;

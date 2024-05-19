@@ -6,8 +6,10 @@ public interface IWalletService
 {
     Task<List<WalletDto>> GetAll();
     Task<WalletDto?> GetWalletById(Guid id);
-    Task<List<WalletDto>> GetWalletsByUserId(string userId);
+    Task<WalletDto?> GetWalletByUserId(string userId);
     Task<WalletDto> CreateWallet(WalletCreateDto dto);
-    Task<WalletDto?> UpdateBalance(WalletUpdateBalance dto);
+    Task<WalletDto?> UpdateWallet(WalletUpdateDto dto);
+    Task<bool> DebitingCash(string userId, decimal sum);
+    Task<bool> ReturnCash(string userId, decimal sum);
     Task<bool> DeleteWallet(Guid walletId);
 }

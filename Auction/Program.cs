@@ -15,7 +15,7 @@ services.AddSwaggerGen();
 
 var appConnetcionString = "Data Source=usersData.db";
 
-services.AddDbContext<AuctionContext>(options => options.UseSqlite(appConnetcionString))
+services.AddDbContext<AuctionContext>(options => options.UseSqlite(appConnetcionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking))
     .AddIdentity<User, IdentityRole>(options =>
     {
         options.User.RequireUniqueEmail = true;
@@ -32,7 +32,7 @@ services.AddScoped<IAuthService, AuthService>();
 services.AddScoped<IUserService, UserService>();
 services.AddScoped<IWalletService, WalletService>();
 services.AddScoped<ILotService, LotService>();
-services.AddScoped<IBiddingService, BiddingService>();
+services.AddScoped<IBidService, BidService>();
 
 var app = builder.Build();
 

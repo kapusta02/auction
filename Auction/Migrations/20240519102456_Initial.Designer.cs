@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction.Migrations
 {
     [DbContext(typeof(AuctionContext))]
-    [Migration("20240518161811_Update")]
-    partial class Update
+    [Migration("20240519102456_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,28 +20,27 @@ namespace Auction.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.19");
 
-            modelBuilder.Entity("Auction.Entities.Bidding", b =>
+            modelBuilder.Entity("Auction.Entities.Bid", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Bids")
-                        .HasMaxLength(4)
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("FinalPrice")
-                        .HasMaxLength(10)
+                    b.Property<Guid>("LotId")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsBindingsStarted")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("Sum")
+                        .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -49,18 +48,11 @@ namespace Auction.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.ToTable("Biddings");
+                    b.HasIndex("LotId");
 
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("b2212d51-a8db-4382-b99a-4919d9f377ee"),
-                            Bids = 0.0m,
-                            CreatedAt = new DateTime(2024, 5, 18, 21, 18, 11, 84, DateTimeKind.Local).AddTicks(3738),
-                            FinalPrice = 1000.0m,
-                            IsBindingsStarted = false,
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Bids");
                 });
 
             modelBuilder.Entity("Auction.Entities.Lot", b =>
@@ -70,34 +62,31 @@ namespace Auction.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("BiddingId")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("CurrentBid")
+                    b.Property<Guid?>("CurrentLeadingBidId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(40)
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Images")
+                    b.Property<string>("ImageLink")
                         .IsRequired()
-                        .HasMaxLength(80)
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsArchived")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsStarted")
+                    b.Property<bool>("IsBiddingStarted")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("StartPrice")
@@ -109,15 +98,13 @@ namespace Auction.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("TradingDuration")
-                        .HasMaxLength(20)
-                        .HasColumnType("TEXT");
+                    b.Property<int>("TradingDurationMinutes")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("TradingStart")
-                        .HasMaxLength(20)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
@@ -127,34 +114,28 @@ namespace Auction.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BiddingId");
-
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Lots");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("06703e74-5bd4-4efe-90e3-e3374560f8ba"),
-                            BiddingId = new Guid("b2212d51-a8db-4382-b99a-4919d9f377ee"),
-                            CreatedAt = new DateTime(2024, 5, 18, 21, 18, 11, 84, DateTimeKind.Local).AddTicks(3759),
-                            CurrentBid = 0.0m,
+                            Id = new Guid("80a987df-1be6-418a-9f89-2e436fbd2e2b"),
+                            CreatedAt = new DateTime(2024, 5, 19, 15, 24, 56, 307, DateTimeKind.Local).AddTicks(438),
                             Description = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!",
-                            Images = "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
+                            ImageLink = "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
                             IsArchived = false,
-                            IsStarted = false,
+                            IsBiddingStarted = false,
                             Name = "Lot #1",
                             StartPrice = 937.1m,
                             Tags = "Test",
-                            TradingDuration = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
+                            TradingDurationMinutes = 10,
                             TradingStart = new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified),
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "bb3ca938-28e9-4a7f-a1a4-c4c8528a746f"
+                            UserId = "2863d41c-dd7e-468c-8f50-516518d392d6"
                         });
                 });
 
@@ -235,9 +216,9 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bb3ca938-28e9-4a7f-a1a4-c4c8528a746f",
+                            Id = "2863d41c-dd7e-468c-8f50-516518d392d6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8f49e0cd-50ec-4a0e-b3fd-4e444e20633c",
+                            ConcurrencyStamp = "e339d924-de9b-4ce6-9689-567a0978dbd0",
                             Email = "peter@example.com",
                             EmailConfirmed = true,
                             FirstName = "Peter",
@@ -246,7 +227,7 @@ namespace Auction.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PETER@EXAMPLE.COM",
                             NormalizedUserName = "PETER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEO+ZbmZFJ+UiI3OR2xv0zRz6Hk1DxkQeZ9WYzTPYADwEfZ2nsRxQqyQb72rrGdbXjg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEUS5k+yiEM2+iVwRHQC0eqEKkYAMI+qFqB8ApK59sy4L9LEZjRyFY9xyMAN/R05Ug==",
                             PhoneNumber = "+77771234567",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "7b97acba-6bd1-4bcf-a319-e568f4890c9e",
@@ -262,9 +243,6 @@ namespace Auction.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
@@ -273,7 +251,10 @@ namespace Auction.Migrations
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<decimal>("Sum")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
@@ -293,28 +274,12 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("eba061ee-cb3c-4cf3-ba33-3d2abeb94728"),
-                            Balance = 1000000.0m,
-                            CreatedAt = new DateTime(2024, 5, 18, 21, 18, 11, 84, DateTimeKind.Local).AddTicks(3696),
+                            Id = new Guid("de78b258-d92e-4c3b-9b5d-1abdf9fbe9c0"),
+                            CreatedAt = new DateTime(2024, 5, 19, 15, 24, 56, 307, DateTimeKind.Local).AddTicks(380),
                             Currency = "Kaspi Coin",
-                            UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            UserId = "bb3ca938-28e9-4a7f-a1a4-c4c8528a746f"
+                            Sum = 1000000.0m,
+                            UserId = "2863d41c-dd7e-468c-8f50-516518d392d6"
                         });
-                });
-
-            modelBuilder.Entity("BiddingUser", b =>
-                {
-                    b.Property<Guid>("BiddingsId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("BiddingsId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BiddingUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -345,7 +310,7 @@ namespace Auction.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eb499953-e9ff-45bf-bae7-9e33017893a1",
+                            Id = "469ed3e1-5dac-4b9e-8dcd-d34da9da7603",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -453,17 +418,34 @@ namespace Auction.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Auction.Entities.Lot", b =>
+            modelBuilder.Entity("Auction.Entities.Bid", b =>
                 {
-                    b.HasOne("Auction.Entities.Bidding", null)
-                        .WithMany("Lot")
-                        .HasForeignKey("BiddingId");
-
-                    b.HasOne("Auction.Entities.User", null)
-                        .WithOne("Lots")
-                        .HasForeignKey("Auction.Entities.Lot", "UserId")
+                    b.HasOne("Auction.Entities.Lot", "Lot")
+                        .WithMany()
+                        .HasForeignKey("LotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Auction.Entities.User", "User")
+                        .WithMany("Biddings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Lot");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Auction.Entities.Lot", b =>
+                {
+                    b.HasOne("Auction.Entities.User", "User")
+                        .WithMany("Lots")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Auction.Entities.Wallet", b =>
@@ -475,21 +457,6 @@ namespace Auction.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BiddingUser", b =>
-                {
-                    b.HasOne("Auction.Entities.Bidding", null)
-                        .WithMany()
-                        .HasForeignKey("BiddingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Auction.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -543,13 +510,10 @@ namespace Auction.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Auction.Entities.Bidding", b =>
-                {
-                    b.Navigation("Lot");
-                });
-
             modelBuilder.Entity("Auction.Entities.User", b =>
                 {
+                    b.Navigation("Biddings");
+
                     b.Navigation("Lots");
 
                     b.Navigation("Wallet");

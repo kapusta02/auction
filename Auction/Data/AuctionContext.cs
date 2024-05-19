@@ -9,7 +9,7 @@ namespace Auction.Data;
 public class AuctionContext : IdentityDbContext<User>
 {
     public DbSet<Wallet> Wallets { get; set; }
-    public DbSet<Bidding> Biddings { get; set; }
+    public DbSet<Bid> Bids { get; set; }
     public DbSet<Lot> Lots { get; set; }
 
     public AuctionContext(DbContextOptions<AuctionContext> options) : base(options)
@@ -32,22 +32,18 @@ public class AuctionContext : IdentityDbContext<User>
         builder.Entity<Wallet>().Property(p => p.Currency).HasMaxLength(36).IsRequired();
 
         // Bidding
-        builder.Entity<Bidding>().HasIndex(b => b.Id).IsUnique();
-        builder.Entity<Bidding>().Property(b => b.Id).HasMaxLength(36).IsRequired();
-        builder.Entity<Bidding>().Property(b => b.Bids).HasMaxLength(4).IsRequired();
-        builder.Entity<Bidding>().Property(b => b.FinalPrice).HasMaxLength(10).IsRequired();
+        builder.Entity<Bid>().HasIndex(b => b.Id).IsUnique();
+        builder.Entity<Bid>().Property(b => b.Id).HasMaxLength(36).IsRequired();
 
         //Lot
         builder.Entity<Lot>().HasIndex(l => l.Id).IsUnique();
         builder.Entity<Lot>().Property(l => l.Id).HasMaxLength(36).IsRequired();
         builder.Entity<Lot>().Property(l => l.UserId).HasMaxLength(36).IsRequired();
-        builder.Entity<Lot>().Property(l => l.Name).HasMaxLength(20).IsRequired();
-        builder.Entity<Lot>().Property(l => l.Description).HasMaxLength(40).IsRequired();
-        builder.Entity<Lot>().Property(l => l.Images).HasMaxLength(80).IsRequired();
+        builder.Entity<Lot>().Property(l => l.Name).HasMaxLength(256).IsRequired();
+        builder.Entity<Lot>().Property(l => l.Description).HasMaxLength(500).IsRequired();
+        builder.Entity<Lot>().Property(l => l.ImageLink).HasMaxLength(256).IsRequired();
         builder.Entity<Lot>().Property(l => l.StartPrice).HasMaxLength(4).IsRequired();
         builder.Entity<Lot>().Property(l => l.Tags).HasMaxLength(15).IsRequired();
-        builder.Entity<Lot>().Property(l => l.TradingStart).HasMaxLength(20).IsRequired();
-        builder.Entity<Lot>().Property(l => l.TradingDuration).HasMaxLength(20).IsRequired();
     }
 
     public void SeedData(ModelBuilder builder)
@@ -87,24 +83,12 @@ public class AuctionContext : IdentityDbContext<User>
             {
                 Id = Guid.NewGuid(),
                 UserId = userId,
-                Balance = 1000000.0M,
+                Sum = 1000000.0M,
                 CreatedAt = DateTime.Now
             }
         );
 
-        Guid biddingId = Guid.NewGuid();
-        builder.Entity<Bidding>().HasData(
-            new Bidding
-            {
-                Id = biddingId,
-                Bids =  0.0M,
-                FinalPrice = 1000.0M,
-                CreatedAt = DateTime.Now,
-                IsBindingsStarted = false,
-            }
-        );
-
-        builder.Entity<Lot>().HasData(
+       builder.Entity<Lot>().HasData(
             new Lot
             {
                 Id = Guid.NewGuid(),
@@ -112,17 +96,15 @@ public class AuctionContext : IdentityDbContext<User>
                 Name = "Lot #1",
                 Description = "Lorem ipsum dolor sit amet" +
                               " consectetur adipisicing elit. Earum, voluptas!",
-                Images =
+                ImageLink = 
                     "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
                 StartPrice = 937.1M,
                 Tags = "Test",
                 TradingStart = new DateTime(2020, 02, 10, 12, 0, 0),
-                TradingDuration = new DateTime(2020, 02, 10, 12, 0, 0),
-                BiddingId = biddingId,
+                TradingDurationMinutes = 10,
                 CreatedAt = DateTime.Now,
-                IsStarted = false,
-                IsArchived = false,
-                CurrentBid = 0.0M
+                IsBiddingStarted = false,
+                IsArchived = false
             }
         );
     }

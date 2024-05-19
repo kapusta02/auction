@@ -7,13 +7,13 @@ namespace Auction.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class UserController : ControllerBase
+public class UsersController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly IUserService _userService;
     private readonly ILogger<AuthController> _logger;
 
-    public UserController(IAuthService authService, IUserService userService, ILogger<AuthController> logger)
+    public UsersController(IAuthService authService, IUserService userService, ILogger<AuthController> logger)
     {
         _authService = authService;
         _userService = userService;
@@ -30,7 +30,7 @@ public class UserController : ControllerBase
         return Ok(users);
     }
 
-    [HttpPatch]
+    [HttpPut]
     [ActionName("updateRole")]
     public async Task<IActionResult> UpdateUserRoleAsync([FromBody] Guid id)
     {
@@ -52,7 +52,7 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpPatch]
+    [HttpPut]
     [ActionName("deleteRole")]
     public async Task<IActionResult> DeleteModeratorRoleAsync([FromBody] Guid id)
     {
@@ -74,7 +74,7 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpPatch]
+    [HttpPut]
     [ActionName("block")]
     public async Task<IActionResult> BlockUserAsync([FromBody] Guid id)
     {

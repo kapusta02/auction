@@ -54,22 +54,6 @@ namespace Auction.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Biddings",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", maxLength: 36, nullable: false),
-                    Bids = table.Column<decimal>(type: "TEXT", maxLength: 4, nullable: false),
-                    FinalPrice = table.Column<decimal>(type: "TEXT", maxLength: 10, nullable: false),
-                    IsBindingsStarted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Biddings", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -176,14 +160,44 @@ namespace Auction.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Lots",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", maxLength: 36, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
+                    ImageLink = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
+                    StartPrice = table.Column<decimal>(type: "TEXT", maxLength: 4, nullable: false),
+                    Tags = table.Column<string>(type: "TEXT", maxLength: 15, nullable: false),
+                    TradingStart = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    TradingDurationMinutes = table.Column<int>(type: "INTEGER", nullable: false),
+                    CurrentLeadingBidId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    IsBiddingStarted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsArchived = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Lots", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Lots_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Wallets",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", maxLength: 36, nullable: false),
-                    Balance = table.Column<decimal>(type: "TEXT", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Sum = table.Column<decimal>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
                     Currency = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false)
                 },
                 constraints: table =>
@@ -198,88 +212,52 @@ namespace Auction.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BiddingUser",
+                name: "Bids",
                 columns: table => new
                 {
-                    BiddingsId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", maxLength: 36, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Sum = table.Column<decimal>(type: "TEXT", nullable: false),
+                    LotId = table.Column<Guid>(type: "TEXT", nullable: false),
                     UserId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BiddingUser", x => new { x.BiddingsId, x.UserId });
+                    table.PrimaryKey("PK_Bids", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BiddingUser_AspNetUsers_UserId",
+                        name: "FK_Bids_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BiddingUser_Biddings_BiddingsId",
-                        column: x => x.BiddingsId,
-                        principalTable: "Biddings",
+                        name: "FK_Bids_Lots_LotId",
+                        column: x => x.LotId,
+                        principalTable: "Lots",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Lots",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", maxLength: 36, nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 40, nullable: false),
-                    Images = table.Column<string>(type: "TEXT", maxLength: 80, nullable: false),
-                    StartPrice = table.Column<decimal>(type: "TEXT", maxLength: 4, nullable: false),
-                    Tags = table.Column<string>(type: "TEXT", maxLength: 15, nullable: false),
-                    TradingStart = table.Column<DateTime>(type: "TEXT", maxLength: 20, nullable: false),
-                    TradingDuration = table.Column<DateTime>(type: "TEXT", maxLength: 20, nullable: false),
-                    IsStarted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IsArchived = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    BiddingId = table.Column<Guid>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Lots", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Lots_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Lots_Biddings_BiddingId",
-                        column: x => x.BiddingId,
-                        principalTable: "Biddings",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "490ba9de-b38e-4f13-b811-4558f2e348b9", null, "User", "USER" });
+                values: new object[] { "469ed3e1-5dac-4b9e-8dcd-d34da9da7603", null, "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "IsBlocked", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "039df29d-e213-454f-8888-edecff4c498c", 0, "cece9b74-3353-4014-a29e-0f5a0eab65b3", "peter@example.com", true, "Peter", false, "Parker", false, null, "PETER@EXAMPLE.COM", "PETER", "AQAAAAIAAYagAAAAEPbrwZgojF3Au/cNUlkaV2BLxLcV1aNTlD/Y83MpkKvsr0JEzJCiI/4Pn0rv0rnJ0w==", "+77771234567", true, "7b97acba-6bd1-4bcf-a319-e568f4890c9e", false, "peter" });
-
-            migrationBuilder.InsertData(
-                table: "Biddings",
-                columns: new[] { "Id", "Bids", "CreatedAt", "FinalPrice", "IsBindingsStarted", "UpdatedAt" },
-                values: new object[] { new Guid("528988a4-9a1f-48ba-b03f-640ba249a996"), 0.0m, new DateTime(2024, 5, 18, 18, 46, 36, 711, DateTimeKind.Local).AddTicks(5351), 1000.0m, false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) });
+                values: new object[] { "2863d41c-dd7e-468c-8f50-516518d392d6", 0, "e339d924-de9b-4ce6-9689-567a0978dbd0", "peter@example.com", true, "Peter", false, "Parker", false, null, "PETER@EXAMPLE.COM", "PETER", "AQAAAAIAAYagAAAAEEUS5k+yiEM2+iVwRHQC0eqEKkYAMI+qFqB8ApK59sy4L9LEZjRyFY9xyMAN/R05Ug==", "+77771234567", true, "7b97acba-6bd1-4bcf-a319-e568f4890c9e", false, "peter" });
 
             migrationBuilder.InsertData(
                 table: "Lots",
-                columns: new[] { "Id", "BiddingId", "CreatedAt", "Description", "Images", "IsArchived", "IsStarted", "Name", "StartPrice", "Tags", "TradingDuration", "TradingStart", "UpdatedAt", "UserId" },
-                values: new object[] { new Guid("b7ddd2d0-dfa4-46e3-a475-6e8b62cf3a87"), new Guid("528988a4-9a1f-48ba-b03f-640ba249a996"), new DateTime(2024, 5, 18, 18, 46, 36, 711, DateTimeKind.Local).AddTicks(5370), "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!", "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user", false, false, "Lot #1", 937.1m, "Test", new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "039df29d-e213-454f-8888-edecff4c498c" });
+                columns: new[] { "Id", "CreatedAt", "CurrentLeadingBidId", "Description", "ImageLink", "IsArchived", "IsBiddingStarted", "Name", "StartPrice", "Tags", "TradingDurationMinutes", "TradingStart", "UpdatedAt", "UserId" },
+                values: new object[] { new Guid("80a987df-1be6-418a-9f89-2e436fbd2e2b"), new DateTime(2024, 5, 19, 15, 24, 56, 307, DateTimeKind.Local).AddTicks(438), null, "Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, voluptas!", "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user", false, false, "Lot #1", 937.1m, "Test", 10, new DateTime(2020, 2, 10, 12, 0, 0, 0, DateTimeKind.Unspecified), null, "2863d41c-dd7e-468c-8f50-516518d392d6" });
 
             migrationBuilder.InsertData(
                 table: "Wallets",
-                columns: new[] { "Id", "Balance", "CreatedAt", "Currency", "UpdatedAt", "UserId" },
-                values: new object[] { new Guid("71e112f9-442a-4626-bc5b-09d71895e30b"), 1000000.0m, new DateTime(2024, 5, 18, 18, 46, 36, 711, DateTimeKind.Local).AddTicks(5327), "Kaspi Coin", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "039df29d-e213-454f-8888-edecff4c498c" });
+                columns: new[] { "Id", "CreatedAt", "Currency", "Sum", "UpdatedAt", "UserId" },
+                values: new object[] { new Guid("de78b258-d92e-4c3b-9b5d-1abdf9fbe9c0"), new DateTime(2024, 5, 19, 15, 24, 56, 307, DateTimeKind.Local).AddTicks(380), "Kaspi Coin", 1000000.0m, null, "2863d41c-dd7e-468c-8f50-516518d392d6" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -319,20 +297,20 @@ namespace Auction.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Biddings_Id",
-                table: "Biddings",
+                name: "IX_Bids_Id",
+                table: "Bids",
                 column: "Id",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_BiddingUser_UserId",
-                table: "BiddingUser",
-                column: "UserId");
+                name: "IX_Bids_LotId",
+                table: "Bids",
+                column: "LotId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Lots_BiddingId",
-                table: "Lots",
-                column: "BiddingId");
+                name: "IX_Bids_UserId",
+                table: "Bids",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lots_Id",
@@ -343,8 +321,7 @@ namespace Auction.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Lots_UserId",
                 table: "Lots",
-                column: "UserId",
-                unique: true);
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Wallets_Id",
@@ -378,10 +355,7 @@ namespace Auction.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BiddingUser");
-
-            migrationBuilder.DropTable(
-                name: "Lots");
+                name: "Bids");
 
             migrationBuilder.DropTable(
                 name: "Wallets");
@@ -390,7 +364,7 @@ namespace Auction.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Biddings");
+                name: "Lots");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

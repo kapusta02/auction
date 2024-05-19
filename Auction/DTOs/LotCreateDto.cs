@@ -5,22 +5,22 @@ namespace Auction.DTOs;
 public class LotCreateDto
 {
     [Required(ErrorMessage = "Пожалуйста введите название лота")]
-    [StringLength(20, ErrorMessage = "Максимум 20 символов")]
+    [StringLength(256, ErrorMessage = "Максимум 256 символов")]
     [DataType(DataType.Text)]
     public string Name { get; set; } = "";
 
     [Required(ErrorMessage = "Пожалуйста введите описание лота")]
-    [StringLength(40, ErrorMessage = "Максимум 40 символов")]
+    [StringLength(500, ErrorMessage = "Максимум 500 символов")]
     [DataType(DataType.Text)]
     public string Description { get; set; } = "";
 
     [Required(ErrorMessage = "Пожалуйста добавьте фотографию лота")]
-    [StringLength(80, ErrorMessage = "Максимум 80 символов")]
+    [StringLength(256, ErrorMessage = "Максимум 256 символов")]
     [DataType(DataType.Text)]
-    public string Images { get; set; } = "";
+    public string ImageLink { get; set; } = "";
 
     [Required(ErrorMessage = "Пожалуйста введите начальную стоимость лота")]
-    [Range(0, 9999, ErrorMessage = "Максимум 4 символа")]
+    [Range(1, 9999, ErrorMessage = "Введите положительную сумму от 1 до 9999")]
     [DataType(DataType.Currency)]
     public decimal StartPrice { get; set; }
 
@@ -33,9 +33,8 @@ public class LotCreateDto
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
     public DateTime TradingStart { get; set; }
 
-    [DataType(DataType.DateTime)]
-    [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm}", ApplyFormatInEditMode = true)]
-    public DateTime TradingDuration { get; set; }
+    [Range(1, 9999, ErrorMessage = "Введите положительное число от 1 до 9999")]
+    public int TradingDurationMinutes { get; set; }
 
     [Required(ErrorMessage = "Пожалуйста введите userId")]
     [StringLength(36, ErrorMessage = "Максимум 36 символов")]

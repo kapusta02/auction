@@ -42,8 +42,10 @@ public class AuthService : IAuthService
             await _userManager.AddToRoleAsync(user, role);
             await _signInManager.SignInAsync(user, false);
         }
+        
+        var userDto = _mapper.Map<UserDto>(user);
 
-        return _mapper.Map<UserDto>(user);
+        return userDto;
     }
 
     public async Task<UserDto?> LoginAsync(UserLoginDto dto)
@@ -57,7 +59,10 @@ public class AuthService : IAuthService
             dto.Password,
             true,
             false);
-        return _mapper.Map<UserDto>(user);
+        
+        var userDto = _mapper.Map<UserDto>(user);
+
+        return userDto;
     }
 
     public async Task<bool> LogOutAsync()
@@ -71,7 +76,9 @@ public class AuthService : IAuthService
         var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id.ToString());
         if (user == null)
             return null;
+        
+        var userDto = _mapper.Map<UserDto>(user);
 
-        return _mapper.Map<UserDto>(user);
+        return userDto;
     }
 }

@@ -8,6 +8,6 @@ public class User : IdentityUser
     public string LastName { get; set; } = "";
     public bool IsBlocked { get; set; }
     public Wallet? Wallet { get; set; }
-    public List<Bidding> Biddings { get; set; } = null!;
-    public Lot? Lots { get; set; }
+    public List<Bid> Biddings { get; set; } = null!;
+    public List<Lot> Lots { get; set; }
 }

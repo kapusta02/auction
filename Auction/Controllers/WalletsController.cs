@@ -23,10 +23,12 @@ public class WalletsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] string? userId)
     {
-        List<WalletDto> walletDtos = new List<WalletDto>();
+        var walletDtos = new List<WalletDto>();
         if (userId != null)
         {
-            walletDtos = await _walletService.GetWalletsByUserId(userId);
+            var userWallet = await _walletService.GetWalletByUserId(userId);
+            if (userWallet != null)
+                walletDtos.Add(userWallet);
         }
         else
         {
@@ -50,7 +52,7 @@ public class WalletsController : ControllerBase
     [Authorize]
     [HttpPost]
     [ActionName("create")]
-    public async Task<IActionResult> CreateWallet([FromBody] WalletCreateDto dto)
+    public async Task<IActionResult> Create([FromBody] WalletCreateDto dto)
     {
         try
         {
@@ -65,14 +67,11 @@ public class WalletsController : ControllerBase
     }
 
     [Authorize]
-    [HttpPatch]
-    [ActionName("updateBalance")]
-    public async Task<IActionResult> UpdateBalance([FromBody] WalletUpdateBalance dto)
+    [HttpPut]
+    [ActionName("update")]
+    public async Task<IActionResult> Update([FromBody] WalletUpdateDto dto)
     {
-        if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value != dto.UserId)
-            return StatusCode(403, "Недостаточно прав");
-
-        var walletDto = await _walletService.UpdateBalance(dto);
+        var walletDto = await _walletService.UpdateWallet(dto);
         if (walletDto == null)
             return StatusCode(400, "Кошелек не найден");
 
@@ -81,7 +80,7 @@ public class WalletsController : ControllerBase
 
     [HttpDelete]
     [ActionName("delete")]
-    public async Task<IActionResult> DeleteWallet(Guid walletId, string? userId)
+    public async Task<IActionResult> Delete(Guid walletId, string? userId)
     {
         if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value != userId)
             return StatusCode(403, "Недостаточно прав");

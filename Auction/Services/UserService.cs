@@ -23,11 +23,6 @@ public class UserService : IUserService
         _userManager = userManager;
     }
 
-    public async Task<User?> GetUserByIdAsync(Guid id)
-    {
-        return await _db.Users.FirstOrDefaultAsync(u => u.Id == id.ToString());
-    }
-
     public async Task<UserDto?> UpdateUserRoleAsync(Guid id)
     {
         var user = await _userManager.FindByIdAsync(id.ToString());
@@ -37,8 +32,9 @@ public class UserService : IUserService
         var currentRoles = await _userManager.GetRolesAsync(user);
         await _userManager.RemoveFromRolesAsync(user, currentRoles);
         await _userManager.AddToRoleAsync(user, UserRole.Moderator.ToString());
-
-        return _mapper.Map<UserDto>(user);
+        
+        var userDto = _mapper.Map<UserDto>(user);
+        return userDto;
     }
 
     public async Task<UserDto?> DeleteModeratorRoleAsync(Guid id)
@@ -50,8 +46,9 @@ public class UserService : IUserService
         var currentRoles = await _userManager.GetRolesAsync(user);
         await _userManager.RemoveFromRolesAsync(user, currentRoles);
         await _userManager.AddToRoleAsync(user, UserRole.User.ToString());
-
-        return _mapper.Map<UserDto>(user);
+        
+        var userDto = _mapper.Map<UserDto>(user);
+        return userDto;
     }
 
     public async Task<UserBlockResponse> UserBlockByIdAsync(Guid id)
@@ -66,10 +63,12 @@ public class UserService : IUserService
         user.IsBlocked = true;
         await _db.SaveChangesAsync();
 
+        var userDto = _mapper.Map<UserDto>(user);
+
         return new UserBlockResponse
         {
             Result = UserBlockResult.Success,
-            User = _mapper.Map<UserDto>(user)
+            User = userDto
         };
     }
 }

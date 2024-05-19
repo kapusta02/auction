@@ -9,12 +9,12 @@ namespace Auction.Controllers;
 
 [ApiController]
 [Route("[controller]/[action]")]
-public class LotController : ControllerBase
+public class LotsController : ControllerBase
 {
     private readonly ILotService _lotService;
     private readonly ILogger<WalletsController> _logger;
 
-    public LotController(ILotService lotService, ILogger<WalletsController> logger)
+    public LotsController(ILotService lotService, ILogger<WalletsController> logger)
     {
         _lotService = lotService;
         _logger = logger;

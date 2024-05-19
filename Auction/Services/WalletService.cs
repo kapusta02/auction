@@ -21,7 +21,9 @@ public class WalletService : IWalletService
     public async Task<List<WalletDto>> GetAll()
     {
         var wallets = await _db.Wallets.ToListAsync();
-        return _mapper.Map<List<WalletDto>>(wallets);
+        
+        var walletDtos = _mapper.Map<List<WalletDto>>(wallets);
+        return walletDtos;
     }
 
     public async Task<WalletDto?> GetWalletById(Guid id)
@@ -30,15 +32,16 @@ public class WalletService : IWalletService
         if (wallet == null)
             return null;
 
-        return _mapper.Map<WalletDto>(wallet);
+        var walletDto = _mapper.Map<WalletDto>(wallet);
+        return walletDto;
     }
 
-    public async Task<List<WalletDto>> GetWalletsByUserId(string userId)
+    public async Task<WalletDto?> GetWalletByUserId(string userId)
     {
-        var wallet = await _db.Wallets.Where(w => w.UserId.ToUpper() == userId.ToUpper())
-            .ToListAsync();
+        var wallet = await _db.Wallets.FirstOrDefaultAsync(w => w.UserId == userId);
 
-        return _mapper.Map<List<WalletDto>>(wallet);
+        var walletDto = _mapper.Map<WalletDto>(wallet);
+        return walletDto;
     }
 
     public async Task<WalletDto> CreateWallet(WalletCreateDto dto)
@@ -50,22 +53,52 @@ public class WalletService : IWalletService
         _db.Wallets.Add(wallet);
         await _db.SaveChangesAsync();
 
-        return _mapper.Map<WalletDto>(wallet);
+        var walletDto = _mapper.Map<WalletDto>(wallet);
+        return walletDto;
     }
 
-    public async Task<WalletDto?> UpdateBalance(WalletUpdateBalance dto)
+    public async Task<WalletDto?> UpdateWallet(WalletUpdateDto dto)
     {
         var wallet = await _db.Wallets.FirstOrDefaultAsync(w => w.UserId == dto.UserId);
         if (wallet == null)
             return null;
 
-        wallet.Balance += dto.Balance;
+        wallet.Sum += Math.Abs(dto.Sum);
         wallet.UpdatedAt = DateTime.Now;
+        _db.Update(wallet);
         await _db.SaveChangesAsync();
 
-        return _mapper.Map<WalletDto>(wallet);
+        var walletDto = _mapper.Map<WalletDto>(wallet);
+        return walletDto;
     }
 
+    public async Task<bool> DebitingCash(string userId, decimal sum)
+    {
+        var wallet = await _db.Wallets.FirstOrDefaultAsync(w => w.UserId == userId);
+        if (wallet == null)
+            return false;
+
+        wallet.Sum -= Math.Abs(sum);
+        wallet.UpdatedAt = DateTime.Now;
+        
+        _db.Wallets.Update(wallet);
+        return true;
+    }
+    
+    public async Task<bool> ReturnCash(string userId, decimal sum)
+    {
+        var wallet = await _db.Wallets.FirstOrDefaultAsync(w => w.UserId == userId);
+        if (wallet == null)
+            return false;
+
+        wallet.Sum += Math.Abs(sum);
+        wallet.UpdatedAt = DateTime.Now;
+
+        _db.Wallets.Update(wallet);
+
+        return true;
+    }
+    
     public async Task<bool> DeleteWallet(Guid walletId)
     {
         var wallet = await _db.Wallets.FirstOrDefaultAsync(w => w.Id == walletId);
