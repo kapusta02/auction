@@ -83,16 +83,28 @@ public class BidService : IBidService
         if (user.Wallet == null || user.Wallet.Sum < bidCreateDto.Sum)
             throw new ExceptionsExtension(ExceptionTypes.ConflictException, "Недостаточно средств на счету");
 
-        var currentLeadingBid = await GetCurrentLeadingBidByLotId(bidCreateDto.LotId);
-        if (currentLeadingBid != null && bidCreateDto.Sum <= currentLeadingBid.Sum)
-            throw new ExceptionsExtension(ExceptionTypes.ConflictException,
-                "Сумма ставки должна быть выше текущей ставки");
+        var existingBid = await _db.Bids.FirstOrDefaultAsync(b =>
+            b.LotId == bidCreateDto.LotId && b.UserId == bidCreateDto.UserId && b.Sum == bidCreateDto.Sum);
+        if (existingBid != null)
+            throw new ExceptionsExtension(ExceptionTypes.ConflictException, "Ставка должна быть выше текущей");
 
+        
         var bid = _mapper.Map<Bid>(bidCreateDto);
         bid.CreatedAt = DateTime.Now;
-
+        
         var added = await _db.Bids.AddAsync(bid);
+        await _db.SaveChangesAsync();
 
+        var currentLeadingBid = await GetCurrentLeadingBidByLotId(bidCreateDto.LotId);
+        if (currentLeadingBid != null && bidCreateDto.Sum <= currentLeadingBid.Sum)
+        {
+            _db.Bids.Remove(added.Entity);
+            await _db.SaveChangesAsync();
+
+            throw new ExceptionsExtension(ExceptionTypes.ConflictException,
+                "Сумма ставки должна быть выше текущей ставки");
+        }
+        
         var isPaymentSuccessed = await PaymentOperations(bidCreateDto.UserId, bidCreateDto.Sum, currentLeadingBid);
         if (!isPaymentSuccessed)
             throw new ExceptionsExtension(ExceptionTypes.ConflictException, "Не удалось выполнить финансовые операции");
@@ -112,6 +124,7 @@ public class BidService : IBidService
             return null;
 
         var bidDto = _mapper.Map<BidDto>(bid);
+
         return bidDto;
     }
 

@@ -80,7 +80,7 @@ public class WalletService : IWalletService
 
         wallet.Sum -= Math.Abs(sum);
         wallet.UpdatedAt = DateTime.Now;
-
+        
         _db.Wallets.Update(wallet);
         return true;
     }
@@ -95,7 +95,6 @@ public class WalletService : IWalletService
         wallet.UpdatedAt = DateTime.Now;
 
         _db.Wallets.Update(wallet);
-
         return true;
     }
 
