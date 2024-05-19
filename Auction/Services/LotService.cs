@@ -89,7 +89,7 @@ public class LotService : ILotService
         var lot = await _db.Lots.FirstOrDefaultAsync(l => l.Id == lotId);
         if (lot == null)
             return false;
-        
+
         _db.Entry(lot).State = EntityState.Detached;
 
         lot.CurrentLeadingBidId = bidId;

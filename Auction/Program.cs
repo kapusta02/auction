@@ -15,7 +15,8 @@ services.AddSwaggerGen();
 
 var appConnetcionString = "Data Source=usersData.db";
 
-services.AddDbContext<AuctionContext>(options => options.UseSqlite(appConnetcionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking))
+services.AddDbContext<AuctionContext>(options =>
+        options.UseSqlite(appConnetcionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking))
     .AddIdentity<User, IdentityRole>(options =>
     {
         options.User.RequireUniqueEmail = true;

@@ -32,7 +32,7 @@ public class UserService : IUserService
         var currentRoles = await _userManager.GetRolesAsync(user);
         await _userManager.RemoveFromRolesAsync(user, currentRoles);
         await _userManager.AddToRoleAsync(user, UserRole.Moderator.ToString());
-        
+
         var userDto = _mapper.Map<UserDto>(user);
         return userDto;
     }
@@ -46,7 +46,7 @@ public class UserService : IUserService
         var currentRoles = await _userManager.GetRolesAsync(user);
         await _userManager.RemoveFromRolesAsync(user, currentRoles);
         await _userManager.AddToRoleAsync(user, UserRole.User.ToString());
-        
+
         var userDto = _mapper.Map<UserDto>(user);
         return userDto;
     }

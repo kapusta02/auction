@@ -88,7 +88,7 @@ public class AuctionContext : IdentityDbContext<User>
             }
         );
 
-       builder.Entity<Lot>().HasData(
+        builder.Entity<Lot>().HasData(
             new Lot
             {
                 Id = Guid.NewGuid(),
@@ -96,7 +96,7 @@ public class AuctionContext : IdentityDbContext<User>
                 Name = "Lot #1",
                 Description = "Lorem ipsum dolor sit amet" +
                               " consectetur adipisicing elit. Earum, voluptas!",
-                ImageLink = 
+                ImageLink =
                     "https://img.freepik.com/free-photo/close-up-on-kitten-surrounded-by-flowers_23-2150782329.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1715558400&semt=ais_user",
                 StartPrice = 937.1M,
                 Tags = "Test",

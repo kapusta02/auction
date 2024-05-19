@@ -5,6 +5,7 @@ namespace Auction.DTOs;
 public class LotUpdateDto
 {
     public Guid Id { get; set; }
+
     [Required(ErrorMessage = "Пожалуйста введите название лота")]
     [StringLength(256, ErrorMessage = "Максимум 256 символов")]
     [DataType(DataType.Text)]

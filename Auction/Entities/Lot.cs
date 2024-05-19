@@ -14,8 +14,7 @@ public class Lot
     public string Tags { get; set; } = "";
     public DateTime TradingStart { get; set; }
     public int TradingDurationMinutes { get; set; }
-    public Guid? CurrentLeadingBidId{ get; set; }
+    public Guid? CurrentLeadingBidId { get; set; }
     public bool IsBiddingStarted { get; set; }
     public bool IsArchived { get; set; }
-    
 }

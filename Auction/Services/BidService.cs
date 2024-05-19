@@ -36,8 +36,8 @@ public class BidService : IBidService
             throw new ExceptionsExtension(ExceptionTypes.EntityNotFoundException, "Запрашиваемого лота не существует");
 
         var lotDto = await _db.Lots.FirstOrDefaultAsync(l => l.Id == bidCreateDto.LotId);
-        
-        
+
+
         if (DateTime.Now >= lot.TradingStart)
         {
             if (lotDto != null)
@@ -45,12 +45,13 @@ public class BidService : IBidService
                 lotDto.IsBiddingStarted = true;
                 _db.Lots.Update(lotDto);
             }
-            
+
             await _db.SaveChangesAsync();
         }
-        if(!lot.IsBiddingStarted)
+
+        if (!lot.IsBiddingStarted)
             throw new ExceptionsExtension(ExceptionTypes.ConflictException, "Торги еще не начались");
-        
+
         if (DateTime.Now >= lot.TradingStart.AddMinutes(lot.TradingDurationMinutes))
         {
             if (!await _db.Bids.AnyAsync(b => b.Lot.Id == bidCreateDto.LotId))
@@ -60,12 +61,12 @@ public class BidService : IBidService
                     lotDto.IsArchived = true;
                     _db.Lots.Update(lotDto);
                 }
-        
+
                 await _db.SaveChangesAsync();
                 throw new ExceptionsExtension(ExceptionTypes.ConflictException,
                     "Время торгов истекло, лот перенесен в архив");
             }
-        
+
             var winningBid = await GetCurrentLeadingBidByLotId(bidCreateDto.LotId);
             if (winningBid != null)
             {
@@ -73,7 +74,7 @@ public class BidService : IBidService
                 var auctionWinner = await _db.Users.FindAsync(auctionWinnerId);
                 if (auctionWinner != null)
                     lot.UserId = auctionWinnerId;
-        
+
                 throw new ExceptionsExtension(ExceptionTypes.ConflictException,
                     $"Торги закончены, победитель {auctionWinner}");
             }

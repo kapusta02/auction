@@ -21,7 +21,7 @@ public class WalletService : IWalletService
     public async Task<List<WalletDto>> GetAll()
     {
         var wallets = await _db.Wallets.ToListAsync();
-        
+
         var walletDtos = _mapper.Map<List<WalletDto>>(wallets);
         return walletDtos;
     }
@@ -80,11 +80,11 @@ public class WalletService : IWalletService
 
         wallet.Sum -= Math.Abs(sum);
         wallet.UpdatedAt = DateTime.Now;
-        
+
         _db.Wallets.Update(wallet);
         return true;
     }
-    
+
     public async Task<bool> ReturnCash(string userId, decimal sum)
     {
         var wallet = await _db.Wallets.FirstOrDefaultAsync(w => w.UserId == userId);
@@ -98,7 +98,7 @@ public class WalletService : IWalletService
 
         return true;
     }
-    
+
     public async Task<bool> DeleteWallet(Guid walletId)
     {
         var wallet = await _db.Wallets.FirstOrDefaultAsync(w => w.Id == walletId);
