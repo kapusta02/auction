@@ -1,1 +1,1 @@
-Система аукциона, где любой пользователь может создать себе кошелек, закинуть деньги, создать лот, а другие участники могут делать ставку на него и выигрывать
+An auction system where any user can create a wallet, add money, create a lot, and other participants can bid on it and win
